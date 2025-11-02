@@ -1,0 +1,161 @@
+asset_id,type,recommended_format,resolution,frames,notes
+hero_auron_idle,sprite,PNG,128x128,4,Pivot bottom-center; Layer: Characters
+hero_auron_walk,sprite,PNG,128x128,6,Pivot bottom-center; Layer: Characters
+hero_auron_run,sprite,PNG,128x128,8,Pivot bottom-center; Layer: Characters
+hero_auron_attack,sprite,PNG,128x128,8,Pivot bottom-center; Hit frame 4; Layer: Characters
+hero_auron_skill1,sprite,PNG,128x128,10,Pivot bottom-center; Hit frame 6; Layer: Characters
+hero_auron_skill2,sprite,PNG,128x128,16,Pivot bottom-center; Hit frame 12; Layer: Characters
+hero_auron_hit,sprite,PNG,128x128,3,Pivot bottom-center; Layer: Characters
+hero_auron_death,sprite,PNG,128x128,8,Pivot bottom-center; Layer: Characters
+hero_auron_portrait,sprite,PNG,256x256,1,UI portrait; Layer: UI
+hero_auron_skin_dawn_voyager,sprite,PNG,128x128,1,IAP exclusive skin base; Layer: Characters
+hero_lyra_idle,sprite,PNG,128x128,4,Pivot bottom-center; Layer: Characters
+hero_lyra_walk,sprite,PNG,128x128,6,Pivot bottom-center; Layer: Characters
+hero_lyra_run,sprite,PNG,128x128,8,Pivot bottom-center; Layer: Characters
+hero_lyra_attack,sprite,PNG,128x128,6,Pivot bottom-center; Hit frame 3; Layer: Characters
+hero_lyra_skill1,sprite,PNG,128x128,8,Pivot bottom-center; Effect frame 5; Layer: Characters
+hero_lyra_skill2,sprite,PNG,128x128,14,Pivot bottom-center; Effect frame 10; Layer: Characters
+hero_lyra_hit,sprite,PNG,128x128,3,Pivot bottom-center; Layer: Characters
+hero_lyra_death,sprite,PNG,128x128,8,Pivot bottom-center; Layer: Characters
+hero_lyra_portrait,sprite,PNG,256x256,1,UI portrait; Layer: UI
+hero_ronan_idle,sprite,PNG,128x128,4,Pivot bottom-center; Layer: Characters
+hero_ronan_walk,sprite,PNG,128x128,6,Pivot bottom-center; Layer: Characters
+hero_ronan_run,sprite,PNG,128x128,8,Pivot bottom-center; Layer: Characters
+hero_ronan_attack,sprite,PNG,128x128,6,Pivot bottom-center; Hit frame 3; Layer: Characters
+hero_ronan_skill1,sprite,PNG,128x128,8,Pivot bottom-center; Hit frame 5; Layer: Characters
+hero_ronan_skill2,sprite,PNG,128x128,10,Pivot bottom-center; Effect frame 4; Layer: Characters
+hero_ronan_block,sprite,PNG,128x128,2,Pivot bottom-center; Layer: Characters
+hero_ronan_hit,sprite,PNG,128x128,3,Pivot bottom-center; Layer: Characters
+hero_ronan_death,sprite,PNG,128x128,8,Pivot bottom-center; Layer: Characters
+hero_ronan_portrait,sprite,PNG,256x256,1,UI portrait; Layer: UI
+hero_cira_idle,sprite,PNG,128x128,4,Pivot bottom-center; Layer: Characters
+hero_cira_walk,sprite,PNG,128x128,6,Pivot bottom-center; Layer: Characters
+hero_cira_run,sprite,PNG,128x128,8,Pivot bottom-center; Layer: Characters
+hero_cira_attack,sprite,PNG,128x128,6,Pivot bottom-center; Hit frame 3; Layer: Characters
+hero_cira_skill1,sprite,PNG,128x128,10,Pivot bottom-center; Spawn frames 3-7; Layer: Characters
+hero_cira_skill2,sprite,PNG,128x128,18,Pivot bottom-center; Spawn frame 8; Layer: Characters
+hero_cira_hit,sprite,PNG,128x128,3,Pivot bottom-center; Layer: Characters
+hero_cira_death,sprite,PNG,128x128,8,Pivot bottom-center; Layer: Characters
+hero_cira_portrait,sprite,PNG,256x256,1,UI portrait; Layer: UI
+hero_milo_idle,sprite,PNG,128x128,4,Pivot bottom-center; Layer: Characters
+hero_milo_walk,sprite,PNG,128x128,6,Pivot bottom-center; Layer: Characters
+hero_milo_run,sprite,PNG,128x128,8,Pivot bottom-center; Layer: Characters
+hero_milo_attack,sprite,PNG,128x128,6,Pivot bottom-center; Hit frame 3; Layer: Characters
+hero_milo_skill1,sprite,PNG,128x128,6,Pivot bottom-center; Teleport frame 2; Layer: Characters
+hero_milo_skill2,sprite,PNG,128x128,20,Pivot bottom-center; Strike frames 4-18; Layer: Characters
+hero_milo_dodge,sprite,PNG,128x128,4,Pivot bottom-center; Layer: Characters
+hero_milo_hit,sprite,PNG,128x128,3,Pivot bottom-center; Layer: Characters
+hero_milo_death,sprite,PNG,128x128,8,Pivot bottom-center; Layer: Characters
+hero_milo_portrait,sprite,PNG,256x256,1,UI portrait; Layer: UI
+enemy_shade_basic_idle,sprite,PNG,96x96,4,Pivot bottom-center; Layer: Enemies
+enemy_shade_basic_walk,sprite,PNG,96x96,6,Pivot bottom-center; Layer: Enemies
+enemy_shade_basic_attack,sprite,PNG,96x96,6,Pivot bottom-center; Layer: Enemies
+enemy_shade_basic_death,sprite,PNG,96x96,6,Pivot bottom-center; Layer: Enemies
+enemy_shade_archer_idle,sprite,PNG,96x96,4,Pivot bottom-center; Layer: Enemies
+enemy_shade_archer_attack,sprite,PNG,96x96,8,Pivot bottom-center; Layer: Enemies
+enemy_shade_archer_death,sprite,PNG,96x96,6,Pivot bottom-center; Layer: Enemies
+enemy_shade_elite_idle,sprite,PNG,128x128,4,Pivot bottom-center; Layer: Enemies
+enemy_shade_elite_walk,sprite,PNG,128x128,6,Pivot bottom-center; Layer: Enemies
+enemy_shade_elite_attack,sprite,PNG,128x128,10,Pivot bottom-center; Layer: Enemies
+enemy_shade_elite_death,sprite,PNG,128x128,8,Pivot bottom-center; Layer: Enemies
+boss_gorath_idle,sprite,PNG,256x256,4,Pivot bottom-center; Layer: Bosses
+boss_gorath_walk,sprite,PNG,256x256,6,Pivot bottom-center; Layer: Bosses
+boss_gorath_attack1,sprite,PNG,256x256,12,Pivot bottom-center; Layer: Bosses
+boss_gorath_attack2,sprite,PNG,256x256,14,Pivot bottom-center; Layer: Bosses
+boss_gorath_ultimate,sprite,PNG,256x256,20,Pivot bottom-center; Layer: Bosses
+boss_gorath_hit,sprite,PNG,256x256,3,Pivot bottom-center; Layer: Bosses
+boss_gorath_death,sprite,PNG,256x256,16,Pivot bottom-center; Layer: Bosses
+boss_eclipse_sovereign_idle,sprite,PNG,320x320,4,Pivot bottom-center; Final boss; Layer: Bosses
+boss_eclipse_sovereign_phase1,sprite,PNG,320x320,16,Pivot bottom-center; Layer: Bosses
+boss_eclipse_sovereign_phase2,sprite,PNG,320x320,18,Pivot bottom-center; Layer: Bosses
+boss_eclipse_sovereign_ultimate,sprite,PNG,320x320,24,Pivot bottom-center; Layer: Bosses
+boss_eclipse_sovereign_death,sprite,PNG,320x320,20,Pivot bottom-center; Layer: Bosses
+vfx_solar_slash_arc,vfx,PNG,128x256,8,Alpha blend; Pivot center; Layer: VFX
+vfx_eclipse_slam_shockwave,vfx,PNG,256x256,12,Alpha blend; Pivot center; Layer: VFX
+vfx_light_beam_heal,vfx,PNG,64x256,8,Additive; Pivot bottom; Layer: VFX
+vfx_radiant_nova,vfx,PNG,512x512,16,Additive; Pivot center; Layer: VFX
+vfx_shield_charge_impact,vfx,PNG,128x128,10,Alpha blend; Pivot center; Layer: VFX
+vfx_iron_fortress_aura,vfx,PNG,256x256,8,Additive loop; Pivot center; Layer: VFX
+vfx_arcane_missile,vfx,PNG,32x32,6,Additive; Pivot center; Layer: VFX
+vfx_meteor,vfx,PNG,64x64,10,Alpha blend; Pivot center; Layer: VFX
+vfx_shadow_dash,vfx,PNG,128x64,6,Alpha blend; Pivot center; Layer: VFX
+vfx_blade_flurry,vfx,PNG,96x96,12,Alpha blend; Pivot center; Layer: VFX
+vfx_hit_impact,vfx,PNG,64x64,6,Alpha blend; Pivot center; Layer: VFX
+vfx_critical_hit,vfx,PNG,64x64,8,Additive; Pivot center; Layer: VFX
+vfx_level_up,vfx,PNG,128x256,16,Additive; Pivot bottom; Layer: VFX
+vfx_damage_number,sprite,PNG,32x32,1,Font atlas; Layer: UI
+env_forest_ground_tile,sprite,PNG,128x128,1,Tileable; Layer: Ground
+env_forest_tree_1,sprite,PNG,128x256,1,Pivot bottom; Layer: Background
+env_forest_tree_2,sprite,PNG,96x192,1,Pivot bottom; Layer: Background
+env_forest_rock_1,sprite,PNG,64x64,1,Pivot bottom; Layer: Obstacles
+env_forest_rock_2,sprite,PNG,96x96,1,Pivot bottom; Layer: Obstacles
+env_sanctuary_ground_tile,sprite,PNG,128x128,1,Tileable; Layer: Ground
+env_sanctuary_building_barracks,sprite,PNG,256x256,1,Pivot bottom; Layer: Buildings
+env_sanctuary_building_workshop,sprite,PNG,256x256,1,Pivot bottom; Layer: Buildings
+env_sanctuary_building_reactor,sprite,PNG,256x256,1,Pivot bottom; Layer: Buildings
+env_sanctuary_building_treasury,sprite,PNG,256x256,1,Pivot bottom; Layer: Buildings
+env_sanctuary_building_training,sprite,PNG,256x256,1,Pivot bottom; Layer: Buildings
+env_umbra_zone_ground_tile,sprite,PNG,128x128,1,Tileable dark theme; Layer: Ground
+env_umbra_zone_crystal_1,sprite,PNG,64x128,1,Pivot bottom; Layer: Decorations
+env_umbra_zone_crystal_2,sprite,PNG,96x160,1,Pivot bottom; Layer: Decorations
+ui_button_normal,ui,PNG,256x96,1,9-slice; corners 32px; Layer: UI
+ui_button_pressed,ui,PNG,256x96,1,9-slice; corners 32px; Layer: UI
+ui_button_disabled,ui,PNG,256x96,1,9-slice; corners 32px; Layer: UI
+ui_panel_background,ui,PNG,512x512,1,9-slice; borders 64px; Layer: UI
+ui_panel_header,ui,PNG,512x128,1,9-slice; sides 64px; Layer: UI
+ui_joystick_background,ui,PNG,256x256,1,Alpha blend; Pivot center; Layer: UI
+ui_joystick_knob,ui,PNG,128x128,1,Alpha blend; Pivot center; Layer: UI
+ui_skill_button_frame,ui,PNG,128x128,1,Pivot center; Layer: UI
+ui_skill_button_cooldown,ui,PNG,128x128,1,Fill overlay; Pivot center; Layer: UI
+ui_hp_bar_background,ui,PNG,256x32,1,9-slice; ends 16px; Layer: UI
+ui_hp_bar_fill,ui,PNG,256x32,1,9-slice; ends 16px; Layer: UI
+ui_xp_bar_background,ui,PNG,512x24,1,9-slice; ends 16px; Layer: UI
+ui_xp_bar_fill,ui,PNG,512x24,1,9-slice; ends 16px; Layer: UI
+ui_currency_gold_icon,ui,PNG,64x64,1,Pivot center; Layer: UI
+ui_currency_shards_icon,ui,PNG,64x64,1,Pivot center; Layer: UI
+ui_icon_settings,ui,PNG,64x64,1,Pivot center; Layer: UI
+ui_icon_shop,ui,PNG,64x64,1,Pivot center; Layer: UI
+ui_icon_quest,ui,PNG,64x64,1,Pivot center; Layer: UI
+ui_icon_battle,ui,PNG,64x64,1,Pivot center; Layer: UI
+ui_icon_base,ui,PNG,64x64,1,Pivot center; Layer: UI
+ui_icon_heroes,ui,PNG,64x64,1,Pivot center; Layer: UI
+ui_icon_ad_available,ui,PNG,64x64,1,Animated glow; Layer: UI
+ui_popup_reward,ui,PNG,512x384,1,9-slice; borders 64px; Layer: UI
+ui_popup_level_up,ui,PNG,512x384,1,9-slice; borders 64px; Layer: UI
+ui_shop_tab_background,ui,PNG,256x96,1,9-slice; Layer: UI
+ui_rarity_common,ui,PNG,256x256,1,Item frame white; Layer: UI
+ui_rarity_uncommon,ui,PNG,256x256,1,Item frame green; Layer: UI
+ui_rarity_rare,ui,PNG,256x256,1,Item frame blue; Layer: UI
+ui_rarity_epic,ui,PNG,256x256,1,Item frame purple; Layer: UI
+ui_rarity_legendary,ui,PNG,256x256,1,Item frame gold animated; Layer: UI
+sfx_sword_swing_1,sfx,WAV,mono,1,0.2s duration
+sfx_sword_swing_2,sfx,WAV,mono,1,0.2s duration
+sfx_sword_hit_1,sfx,WAV,mono,1,0.15s duration
+sfx_sword_hit_2,sfx,WAV,mono,1,0.15s duration
+sfx_magic_cast_1,sfx,WAV,mono,1,0.3s duration
+sfx_magic_cast_2,sfx,WAV,mono,1,0.3s duration
+sfx_magic_impact,sfx,WAV,mono,1,0.2s duration
+sfx_shield_bash,sfx,WAV,mono,1,0.25s duration
+sfx_shield_block,sfx,WAV,mono,1,0.2s duration
+sfx_explosion,sfx,WAV,mono,1,0.4s duration
+sfx_heal,sfx,WAV,mono,1,0.3s chime
+sfx_damage_number,sfx,WAV,mono,1,0.1s pop
+sfx_critical_hit,sfx,WAV,mono,1,0.2s emphasis
+sfx_level_up,sfx,WAV,mono,1,0.8s triumphant
+sfx_button_click,sfx,WAV,mono,1,0.1s soft
+sfx_button_hover,sfx,WAV,mono,1,0.05s subtle
+sfx_reward_claim,sfx,WAV,mono,1,0.5s jingle
+sfx_purchase_complete,sfx,WAV,mono,1,0.6s success
+sfx_building_upgrade,sfx,WAV,mono,1,0.5s construction
+sfx_hero_select_auron,sfx,WAV,mono,1,0.8s voice line
+sfx_hero_select_lyra,sfx,WAV,mono,1,0.8s voice line
+sfx_hero_select_ronan,sfx,WAV,mono,1,0.8s voice line
+sfx_hero_select_cira,sfx,WAV,mono,1,0.8s voice line
+sfx_hero_select_milo,sfx,WAV,mono,1,0.8s voice line
+sfx_victory,sfx,WAV,mono,1,1.0s celebration
+sfx_defeat,sfx,WAV,mono,1,1.0s somber
+music_main_theme,sfx,OGG,stereo,1,150s loop orchestral
+music_combat,sfx,OGG,stereo,1,90s loop upbeat
+music_sanctuary,sfx,OGG,stereo,1,180s loop calm
+music_boss_battle,sfx,OGG,stereo,1,120s loop intense
+music_victory_jingle,sfx,OGG,stereo,1,5s short celebration

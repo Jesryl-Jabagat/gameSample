@@ -1,0 +1,296 @@
+===================================================================
+ECLIPSE REBORN: Animator Setup Documentation
+===================================================================
+
+This document describes the Animator Controller setup, parameters, 
+state machines, and animation events for all heroes.
+
+-------------------------------------------------------------------
+ANIMATOR PARAMETERS
+-------------------------------------------------------------------
+
+All hero Animator Controllers should include these parameters:
+
+1. FLOAT: Speed
+   - Range: 0.0 to 1.0
+   - Controls: Idle → Walk → Run blend tree
+   - Set by: PlayerController.UpdateAnimationParameters()
+
+2. TRIGGER: Attack
+   - Triggers: Basic attack animation
+   - Returns to: Idle after completion
+   - Animation Event: OnAttackHit() at hit frame
+
+3. TRIGGER: Skill1
+   - Triggers: Skill 1 animation (hero-specific)
+   - Returns to: Idle after completion
+   - Animation Event: OnSkill1Hit() at effect frame
+
+4. TRIGGER: Skill2
+   - Triggers: Skill 2 / Ultimate animation
+   - Returns to: Idle after completion
+   - Animation Event: OnSkill2Hit() at effect frame
+
+5. TRIGGER: Dash
+   - Triggers: Dash/dodge animation
+   - Returns to: Movement blend tree after completion
+   - Duration: 0.3 seconds (matches dashDuration)
+
+6. TRIGGER: Hit
+   - Triggers: Take damage reaction animation
+   - Returns to: Previous state after completion
+   - Duration: 0.2 seconds (brief)
+
+7. TRIGGER: Death
+   - Triggers: Death animation
+   - Ends in: Death state (does not loop)
+   - Duration: 0.8 seconds
+
+-------------------------------------------------------------------
+STATE MACHINE DIAGRAM
+-------------------------------------------------------------------
+
+Entry
+  ↓
+[Movement Blend Tree] ←→ (Default state, always returns here)
+  ├─ Idle (Speed = 0)
+  ├─ Walk (Speed = 0.1 - 0.7)
+  └─ Run (Speed = 0.7 - 1.0)
+  
+Transitions FROM Movement Blend Tree:
+  → Attack (Trigger: Attack) → [Attack State] → Return to Movement
+  → Skill1 (Trigger: Skill1) → [Skill1 State] → Return to Movement
+  → Skill2 (Trigger: Skill2) → [Skill2 State] → Return to Movement
+  → Dash (Trigger: Dash) → [Dash State] → Return to Movement
+  → Hit (Trigger: Hit) → [Hit State] → Return to previous
+  → Death (Trigger: Death) → [Death State] → END (no return)
+
+Transition Settings:
+  - Has Exit Time: FALSE (for all triggers)
+  - Fixed Duration: FALSE
+  - Transition Duration: 0.1s (smooth blending)
+  - Interruption Source: None (animations play fully)
+
+-------------------------------------------------------------------
+ANIMATION CLIPS PER HERO
+-------------------------------------------------------------------
+
+AURON (hero_001_auron):
+  - Idle: 4 frames, 0.5s loop
+  - Walk: 6 frames, 0.6s loop
+  - Run: 8 frames, 0.5s loop
+  - Attack: 8 frames, 0.4s duration → EVENT at frame 4
+  - Skill1 (Solar Cleave): 10 frames, 0.6s → EVENT at frame 6
+  - Skill2 (Eclipse Breaker): 16 frames, 1.0s → EVENT at frame 12
+  - Dash: 6 frames, 0.3s
+  - Hit: 3 frames, 0.2s
+  - Death: 8 frames, 0.8s
+
+LYRA (hero_002_lyra):
+  - Idle: 4 frames, 0.6s loop
+  - Walk: 6 frames, 0.7s loop
+  - Run: 8 frames, 0.6s loop
+  - Attack: 6 frames, 0.5s → EVENT at frame 3
+  - Skill1 (Healing Radiance): 8 frames, 0.7s → EVENT at frame 5
+  - Skill2 (Sanctuary Blessing): 14 frames, 1.2s → EVENT at frame 10
+  - Dash: 6 frames, 0.3s
+  - Hit: 3 frames, 0.2s
+  - Death: 8 frames, 0.8s
+
+RONAN (hero_003_ronan):
+  - Idle: 4 frames, 0.5s loop
+  - Walk: 6 frames, 0.8s loop (slower due to heavy armor)
+  - Run: 8 frames, 0.7s loop
+  - Attack: 6 frames, 0.5s → EVENT at frame 3
+  - Skill1 (Shield Bash): 8 frames, 0.6s → EVENT at frame 5
+  - Skill2 (Unbreakable Bulwark): 10 frames, 0.8s → EVENT at frame 4
+  - Block: 2 frames, 0.3s (shield raised pose)
+  - Dash: 6 frames, 0.3s
+  - Hit: 3 frames, 0.2s
+  - Death: 8 frames, 0.8s
+
+CIRA (hero_004_cira):
+  - Idle: 4 frames, 0.5s loop (floating orbs animation)
+  - Walk: 6 frames, 0.6s loop
+  - Run: 8 frames, 0.5s loop
+  - Attack: 6 frames, 0.4s → EVENT at frame 3
+  - Skill1 (Arcane Missiles): 10 frames, 0.8s → EVENTS at frames 3,4,5,6,7
+  - Skill2 (Meteor Storm): 18 frames, 1.5s → EVENT at frame 10
+  - Dash: 6 frames, 0.3s
+  - Hit: 3 frames, 0.2s
+  - Death: 8 frames, 0.8s
+
+MILO (hero_005_milo):
+  - Idle: 4 frames, 0.4s loop (crouched stance)
+  - Walk: 6 frames, 0.5s loop
+  - Run: 8 frames, 0.4s loop (fastest runner)
+  - Attack: 6 frames, 0.3s → EVENT at frame 3
+  - Skill1 (Shadowstep): 6 frames, 0.4s → EVENT at frame 4 (teleport effect)
+  - Skill2 (Blade Dance): 20 frames, 1.2s → EVENTS at frames 4,6,8,10,12,14,16,18
+  - Dodge: 4 frames, 0.3s (evasive roll)
+  - Dash: 6 frames, 0.3s
+  - Hit: 3 frames, 0.2s
+  - Death: 8 frames, 0.8s
+
+-------------------------------------------------------------------
+ANIMATION EVENTS
+-------------------------------------------------------------------
+
+Animation Events are used to trigger damage application, VFX spawning,
+and SFX playback at precise frames within animations.
+
+SETUP IN UNITY:
+1. Select animation clip in Project window
+2. Open Animation window (Window → Animation → Animation)
+3. Click the "Add Event" button at the desired frame
+4. In Inspector, set Function name (must match exact method name)
+5. Events call public methods on components attached to the GameObject
+
+EVENT FUNCTION NAMES (must match PlayerController.cs methods):
+
+1. OnAttackHit()
+   - Called at hit frame of basic attack animation
+   - Applies damage to enemies in range
+   - Used by: All heroes' Attack animations
+
+2. OnSkill1Hit()
+   - Called at effect frame of Skill 1 animation
+   - Applies skill damage and effects
+   - Used by: All heroes' Skill1 animations
+
+3. OnSkill2Hit()
+   - Called at effect frame of Skill 2 animation
+   - Applies ultimate damage and effects
+   - Used by: All heroes' Skill2 animations
+
+4. SpawnVFX(string vfxName)
+   - Spawns visual effect at specified frame
+   - Parameter: VFX prefab name (e.g., "solar_slash_arc")
+   - Used by: All attack/skill animations
+
+5. PlaySFX(string sfxName)
+   - Plays sound effect at specified frame
+   - Parameter: Audio clip name (e.g., "sfx_sword_swing_1")
+   - Used by: All animations for audio feedback
+
+EXAMPLE EVENT TIMELINE (Auron's Attack animation, 8 frames, 0.4s):
+
+Frame 0: PlaySFX("sfx_sword_swing_1")
+Frame 4: OnAttackHit() + SpawnVFX("vfx_hit_impact")
+Frame 8: Animation ends, return to idle
+
+EXAMPLE EVENT TIMELINE (Cira's Arcane Missiles, 10 frames, 0.8s):
+
+Frame 3: SpawnVFX("vfx_arcane_missile") + OnSkill1Hit()
+Frame 4: SpawnVFX("vfx_arcane_missile")
+Frame 5: SpawnVFX("vfx_arcane_missile")
+Frame 6: SpawnVFX("vfx_arcane_missile")
+Frame 7: SpawnVFX("vfx_arcane_missile") + PlaySFX("sfx_magic_cast_1")
+Frame 10: Animation ends
+
+-------------------------------------------------------------------
+BLEND TREE SETUP (Movement)
+-------------------------------------------------------------------
+
+Create a 1D Blend Tree for movement:
+
+Parameter: Speed (0.0 to 1.0)
+
+Thresholds:
+  - 0.0: Idle animation (looping)
+  - 0.5: Walk animation (looping)
+  - 1.0: Run animation (looping)
+
+Blend Type: Linear
+Compute Thresholds: Automatic
+
+This creates smooth transitions between idle, walk, and run based
+on the Speed parameter value.
+
+-------------------------------------------------------------------
+LAYER SETUP (OPTIONAL FOR ADVANCED ANIMATION)
+-------------------------------------------------------------------
+
+For more complex animation needs, use layers:
+
+BASE LAYER (Weight 1.0):
+  - Contains all movement and combat animations
+  - Always active
+
+UPPER BODY LAYER (Weight 0.5, Additive):
+  - Contains upper body gestures (wave, point, etc.)
+  - Allows talking/emoting while moving
+  - Optional for MVP
+
+FACIAL LAYER (Weight 1.0, Override):
+  - Contains facial expressions (blink, talk, hurt)
+  - Optional for MVP
+
+-------------------------------------------------------------------
+MOBILE OPTIMIZATION TIPS
+-------------------------------------------------------------------
+
+1. Animation Compression:
+   - Use Optimal compression (not Keyframe Reduction)
+   - Enable "Anim. Compression" error threshold: 0.5%
+
+2. Update Mode:
+   - Set Animator Update Mode to "Normal" (not "Animate Physics")
+   - Culling Mode: "Cull Update Transforms" (stop animating off-screen)
+
+3. Baking:
+   - Bake animations into model (reduces runtime overhead)
+   - Disable "Optimize Game Objects" for debugging, enable for builds
+
+4. LOD (Level of Detail):
+   - Reduce animation update rate for distant characters
+   - Skip every other frame for off-screen enemies
+
+5. Avoid Expensive Features:
+   - Minimize use of IK (Inverse Kinematics)
+   - Avoid humanoid rigs if not needed (use Generic)
+
+-------------------------------------------------------------------
+TESTING CHECKLIST
+-------------------------------------------------------------------
+
+□ All parameters exist in Animator Controller
+□ All transitions have correct conditions
+□ Animation clips are assigned to states
+□ Animation events are placed at correct frames
+□ Events call correct function names (case-sensitive!)
+□ Blend tree thresholds create smooth movement
+□ Death animation does not loop (stays on last frame)
+□ Hit reaction does not interrupt critical animations
+□ Dash animation duration matches code (0.3s)
+□ All hero Animator Controllers follow same structure
+
+-------------------------------------------------------------------
+COMMON ISSUES & SOLUTIONS
+-------------------------------------------------------------------
+
+ISSUE: Animation events not firing
+→ Check function name spelling (case-sensitive)
+→ Ensure component with method is on same GameObject as Animator
+→ Verify event is placed on correct frame
+
+ISSUE: Transitions feel snappy/instant
+→ Increase Transition Duration to 0.1 - 0.2s
+→ Enable "Fixed Duration" and set time in seconds
+
+ISSUE: Character slides during animations
+→ Disable "Apply Root Motion" on Animator component
+→ Use script-based movement (Rigidbody2D.velocity)
+
+ISSUE: Animations stuck in loop
+→ Check "Has Exit Time" is unchecked for trigger transitions
+→ Verify trigger is being reset after use
+
+ISSUE: Performance drops with many characters
+→ Enable "Culling Mode: Cull Update Transforms"
+→ Use object pooling for enemies
+→ Reduce animation update rate for off-screen units
+
+===================================================================
+END OF ANIMATOR SETUP DOCUMENTATION
+===================================================================

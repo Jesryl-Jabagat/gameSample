@@ -1,0 +1,291 @@
+===================================================================
+MOBILE HUD LAYOUT - Eclipse Reborn
+===================================================================
+
+SCREEN DIMENSIONS: 1920x1080 (16:9 reference)
+SAFE AREA: Account for notches (20% margin top/bottom on modern phones)
+TOUCH TARGET SIZE: Minimum 64x64 dp (80x80 dp recommended)
+
+-------------------------------------------------------------------
+LAYOUT OVERVIEW (ASCII MOCKUP)
+-------------------------------------------------------------------
+
+┌──────────────────────────────────────────────────────────────┐
+│ ┌──────┐  HP: ████████░░  Lv.15  ┌──────┐  ⚙️  💰1250  💎340│ TOP BAR
+│ │AVATAR│  XP: ██████████░░         │ MAP  │                  │
+│ └──────┘                            └──────┘                  │
+├──────────────────────────────────────────────────────────────┤
+│                                                                │
+│                                                                │
+│                    [GAME VIEWPORT]                             │
+│                                                                │
+│                  Hero and enemies render here                  │
+│                                                                │
+│                                                                │
+│                                                                │
+├──────────────────────────────────────────────────────────────┤
+│  ┌─────┐                                         ┌──────┐     │ BOTTOM UI
+│  │ ●   │                                         │ ULT  │     │
+│  │ │   │   Joystick                              │ ⚡   │     │
+│  │ ─── │   Area                                  └──────┘     │
+│  └─────┘                                    ┌───┐  ┌───┐      │
+│                                             │SK1│  │SK2│      │
+│          [AUTO]  [BASE]  [PAUSE]            └───┘  └───┘      │
+└──────────────────────────────────────────────────────────────┘
+
+-------------------------------------------------------------------
+DETAILED ELEMENT SPECIFICATIONS
+-------------------------------------------------------------------
+
+=== TOP LEFT (Player Info) ===
+
+Position: 20px from left, 40px from top (safe area)
+Width: 400px
+Height: 120px
+
+Elements:
+1. HERO AVATAR
+   - Size: 80x80 px
+   - Border: 4px gold
+   - Contains: Hero portrait (circular crop)
+   - Tap: Opens hero details panel
+
+2. HP BAR
+   - Position: Right of avatar, offset 10px
+   - Size: 250x24 px
+   - Background: Dark red (#3A0000)
+   - Fill: Bright red gradient (#FF0000 → #FF6666)
+   - Text: "HP: 875/1000" (white, 16pt, bold)
+   - Drop shadow for readability
+
+3. XP BAR
+   - Position: Below HP bar, 4px spacing
+   - Size: 250x16 px
+   - Background: Dark blue (#00003A)
+   - Fill: Blue gradient (#0066FF → #66AAFF)
+   - Text: "XP: 5200/5744" (white, 12pt)
+
+4. LEVEL INDICATOR
+   - Position: Right of HP bar
+   - Size: 60x60 px circle
+   - Background: Gold gradient
+   - Text: "Lv.15" (white, bold, 18pt)
+
+=== TOP RIGHT (Currency & Settings) ===
+
+Position: Right-aligned, 20px from right, 40px from top
+Width: 300px
+Height: 80px
+
+Elements:
+1. SETTINGS BUTTON
+   - Size: 60x60 px
+   - Icon: Gear/cog symbol
+   - Background: Semi-transparent black (#00000080)
+   - Tap: Opens settings menu
+
+2. GOLD DISPLAY
+   - Position: Left of settings, 80px spacing
+   - Icon: Gold coin (48x48 px)
+   - Text: "1,250" (yellow, 20pt, bold)
+   - Tap: Opens shop (gold tab)
+
+3. SHARDS DISPLAY
+   - Position: Left of gold, 80px spacing
+   - Icon: Blue crystal (48x48 px)
+   - Text: "340" (cyan, 20pt, bold)
+   - Tap: Opens shop (shards tab)
+
+4. MINI-MAP
+   - Size: 120x120 px
+   - Position: Below currency, 10px spacing
+   - Shows: Current area layout, enemies (red dots), player (blue dot)
+   - Border: 2px white
+   - Tap: Opens full map
+
+=== CENTER (Game Viewport) ===
+
+Position: Between top bar and bottom UI
+Size: Full width, ~70% of screen height
+Background: Game render camera
+
+Overlay Elements:
+- Enemy HP bars (above enemy heads, 100x12 px)
+- Damage numbers (floating, pooled)
+- VFX particles (additive blend)
+- Status icons (above player head: buffs green, debuffs red)
+
+=== BOTTOM LEFT (Movement Controls) ===
+
+Position: 40px from left, 40px from bottom (safe area)
+Size: 200x200 px
+
+VIRTUAL JOYSTICK:
+- Background circle: 180x180 px, semi-transparent gray (#88888880)
+- Knob circle: 80x80 px, white with gradient
+- Touch area: 200x200 px (larger than visual for easier control)
+- Behavior: Appears on touch, fades when released (0.3s fade)
+- 8-directional movement (quantized to 45° angles)
+- Dead zone: 10% center (no movement if minimal touch)
+
+=== BOTTOM CENTER (Action Buttons) ===
+
+Position: Centered horizontally, 40px from bottom
+Width: 400px
+Height: 80px
+
+Buttons (left to right):
+1. AUTO BUTTON
+   - Size: 100x60 px
+   - Text: "AUTO" (white, 16pt)
+   - Background: Blue when OFF, green when ON
+   - Toggle: Tap to enable/disable auto-battle
+   - Indicator: "AI" icon when active
+
+2. BASE BUTTON
+   - Size: 100x60 px
+   - Icon: House/castle symbol
+   - Background: Brown/tan
+   - Tap: Return to Sanctuary (shows confirmation popup)
+
+3. PAUSE BUTTON
+   - Size: 80x60 px
+   - Icon: || (pause symbol)
+   - Background: Dark gray
+   - Tap: Pause game, show pause menu
+
+Spacing: 20px between buttons
+
+=== BOTTOM RIGHT (Combat Skills) ===
+
+Position: 40px from right, 40px from bottom
+Width: 280px
+Height: 260px
+
+Layout (bottom to top):
+
+1. SKILL 1 BUTTON
+   - Size: 100x100 px
+   - Position: Bottom right corner
+   - Icon: Hero's skill 1 icon (see hero_templates.json)
+   - Cooldown: Circular fill overlay (0-100%)
+   - Text: "3.5s" when on cooldown (center, white, 18pt)
+   - Glow effect when available
+
+2. SKILL 2 BUTTON
+   - Size: 100x100 px
+   - Position: Left of Skill 1, 20px spacing
+   - Icon: Hero's skill 2 icon
+   - Cooldown: Same as Skill 1
+
+3. ULTIMATE BUTTON
+   - Size: 120x120 px
+   - Position: Above skills, centered, 20px spacing
+   - Icon: Hero's ultimate icon (animated glow)
+   - Charge bar: Fills as damage dealt/taken
+   - Text: "95%" when charging (yellow, 20pt)
+   - Background: Gold border when ready, pulses
+   - Tap: Triggers ultimate skill
+
+Feedback:
+- Tap: Scale animation (1.0 → 1.1 → 1.0 in 0.15s)
+- Cooldown: Gray overlay with radial fill clockwise
+- Unavailable: 50% opacity, no glow
+- Ready: Pulsing glow effect (0.8 → 1.0 alpha, 1s loop)
+
+-------------------------------------------------------------------
+DYNAMIC ELEMENTS & POPUPS
+-------------------------------------------------------------------
+
+DAMAGE NUMBERS:
+- Spawn at hit location
+- Size: Normal 32pt, Critical 48pt
+- Color: White (normal), Yellow (crit), Red (DoT)
+- Movement: Float upward 80px over 1s
+- Fade: Alpha 1.0 → 0.0 over last 0.5s
+- Pool size: 20 instances (reuse to avoid GC)
+
+LEVEL UP POPUP:
+- Size: 600x400 px (center screen)
+- Background: Gold panel with glow
+- Text: "LEVEL UP! Now Level 16" (48pt, bold)
+- Stat increases shown: "+25 HP, +3.2 ATK, +1.5 DEF"
+- Button: "CONTINUE" (closes popup)
+- Audio: Level up jingle
+
+OFFLINE REWARDS POPUP:
+- Size: 700x500 px (center screen)
+- Background: Blue panel
+- Text: "Welcome back! You were offline for 3.5 hours"
+- Rewards: "Earned: 1,200 gold, 3 shards"
+- Buttons: 
+  - "CLAIM" (takes rewards, closes popup)
+  - "WATCH AD TO DOUBLE" (shows ad, grants 2x, closes popup)
+- Layout: Rewards displayed as icons with numbers
+
+PAUSE MENU:
+- Size: 800x600 px (center screen, dim background 50%)
+- Buttons (vertical stack):
+  - RESUME (green, closes menu)
+  - SETTINGS (gray, opens settings)
+  - RETURN TO BASE (brown, confirmation then exit)
+  - QUIT (red, confirmation then exit to main menu)
+
+-------------------------------------------------------------------
+RESPONSIVE DESIGN NOTES
+-------------------------------------------------------------------
+
+PORTRAIT MODE (9:16, 1080x1920):
+- Joystick: Bottom left, unchanged
+- Skills: Bottom right, unchanged
+- Top bars: Compressed, currency icons only (no text)
+- Game viewport: Taller, more vertical space
+
+LANDSCAPE MODE (16:9, 1920x1080):
+- Default layout as shown above
+- More horizontal space for UI elements
+
+NOTCH HANDLING:
+- Safe area insets: 44px top (iPhone X+), 0px bottom
+- Move top UI down if notch detected
+- Use Unity's Screen.safeArea API
+
+TABLET (iPad, 4:3):
+- Scale UI elements 1.2x (larger touch targets)
+- Increase spacing between elements
+- Keep aspect ratio of panels
+
+-------------------------------------------------------------------
+TOUCH INTERACTION GUIDELINES
+-------------------------------------------------------------------
+
+1. Minimum touch size: 64x64 dp (recommended 80x80 dp)
+2. Spacing between buttons: 16-20 px minimum
+3. Feedback: Visual (scale/glow) + haptic (if enabled)
+4. Response time: <100ms from touch to action
+5. No precision taps (no small text links)
+6. Gestures: Swipe for menus, pinch for zoom (future)
+
+-------------------------------------------------------------------
+ACCESSIBILITY FEATURES
+-------------------------------------------------------------------
+
+1. High contrast mode: +20% contrast on all text
+2. Colorblind support: Icons + text labels (not just colors)
+3. Text size: Scalable UI (settings option)
+4. One-handed mode: Move joystick to right side (toggle)
+5. Auto-battle: Essential for accessibility
+
+-------------------------------------------------------------------
+PERFORMANCE OPTIMIZATION
+-------------------------------------------------------------------
+
+1. UI Atlas: Combine all UI sprites into 2-3 atlases
+2. Draw calls: Target <10 for UI (batch where possible)
+3. Canvas: Use "Screen Space - Camera" for UI effects
+4. Event system: Disable raycast on decorative elements
+5. Updates: Only update changing elements (HP bar, cooldowns)
+
+===================================================================
+END OF MOBILE HUD LAYOUT DOCUMENTATION
+===================================================================

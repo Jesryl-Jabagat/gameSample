@@ -2,168 +2,456 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="mobile-web-app-capable" content="yes">
-    <title>Eclipse Reborn: Chronicles of the Lost Sun</title>
-    <link rel="stylesheet" href="css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eclipse Reborn - Animation Assets Viewer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+            color: #fff;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 3em;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #a8dadc;
+            font-size: 1.2em;
+        }
+
+        .section {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 15px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+        }
+
+        h2 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            font-size: 2em;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #ffed4e;
+            margin: 20px 0 15px 0;
+            font-size: 1.5em;
+        }
+
+        .asset-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .asset-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 215, 0, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            transition: all 0.3s;
+        }
+
+        .asset-card:hover {
+            border-color: #ffd700;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .asset-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+        }
+
+        .asset-card h4 {
+            color: #ffd700;
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+
+        .asset-card p {
+            color: #a8dadc;
+            font-size: 0.9em;
+            margin: 5px 0;
+        }
+
+        .hero-stats {
+            background: rgba(255, 215, 0, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 0.85em;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 3px 0;
+        }
+
+        .usage-note {
+            background: rgba(138, 43, 226, 0.2);
+            border: 2px solid rgba(138, 43, 226, 0.4);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .usage-note h3 {
+            color: #ba55d3;
+            margin-top: 0;
+        }
+
+        .usage-note code {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #ffd700;
+        }
+    </style>
 </head>
 <body>
-    <div id="game-container">
-        <div id="loading-screen" class="screen active">
-            <div class="loading-content">
-                <h1>ECLIPSE REBORN</h1>
-                <p class="subtitle">Chronicles of the Lost Sun</p>
-                <div class="loading-bar">
-                    <div class="loading-progress"></div>
-                </div>
-                <p class="loading-text">Loading...</p>
+    <div class="header">
+        <h1>ECLIPSE REBORN</h1>
+        <p class="subtitle">Chronicles of the Lost Sun - Animation Assets Viewer</p>
+    </div>
+
+    <div class="section">
+        <h2>🎮 Project Overview</h2>
+        <p style="line-height: 1.8; color: #e0e0e0;">
+            This is a complete Unity C# development bundle for a mobile 2D action RPG. Below are all the generated visual assets 
+            including character sprites, animation sheets, and enemy designs ready to be imported into Unity 2021.3+ LTS.
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>⚔️ Hero Characters</h2>
+
+        <h3>Auron - Solaris Vanguard</h3>
+        <p style="color: #a8dadc; margin-bottom: 15px;">Balanced DPS | Greatsword | First Lightbringer</p>
+        <div class="asset-grid">
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Auron_hero_character_sprite_8cfb17d1.png" alt="Auron Character">
+                <h4>Character Portrait</h4>
+                <p>Base character design</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Auron_walk_animation_sheet_4ea9802d.png" alt="Auron Walk">
+                <h4>Walk Animation</h4>
+                <p>6 frames - Walk cycle</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Auron_attack_animation_sheet_9a6fb7fd.png" alt="Auron Attack">
+                <h4>Attack Animation</h4>
+                <p>8 frames - Greatsword swing</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Auron_skill_animation_sheet_9708b0d3.png" alt="Auron Skill">
+                <h4>Solar Cleave Skill</h4>
+                <p>10 frames - Special attack</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Auron_hit_animation_sheet_d9985dd3.png" alt="Auron Hit">
+                <h4>Hit Animation</h4>
+                <p>3 frames - Taking damage</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Auron_death_animation_sheet_c399a777.png" alt="Auron Death">
+                <h4>Death Animation</h4>
+                <p>8 frames - Defeat sequence</p>
+            </div>
+        </div>
+        <div class="hero-stats">
+            <div class="stat-row"><span>HP: 500</span><span>ATK: 45</span><span>DEF: 20</span><span>SPD: 100</span><span>CRIT: 5%</span></div>
+        </div>
+
+        <h3>Lyra - Lightweaver</h3>
+        <p style="color: #a8dadc; margin-bottom: 15px;">Healer / Support | Staff | Priestess</p>
+        <div class="asset-grid">
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Lyra_healer_character_sprite_96d4ac30.png" alt="Lyra Character">
+                <h4>Character Portrait</h4>
+                <p>Base character design</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Lyra_walk_animation_sheet_a73ff6fd.png" alt="Lyra Walk">
+                <h4>Walk Animation</h4>
+                <p>6 frames - Graceful walk</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Lyra_attack_animation_sheet_6d6b52af.png" alt="Lyra Attack">
+                <h4>Attack Animation</h4>
+                <p>6 frames - Staff swing</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Lyra_healing_animation_sheet_d768d722.png" alt="Lyra Heal">
+                <h4>Healing Radiance Skill</h4>
+                <p>8 frames - Casting heal spell</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Lyra_hit_animation_sheet_c9834836.png" alt="Lyra Hit">
+                <h4>Hit Animation</h4>
+                <p>3 frames - Taking damage</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Lyra_death_sequence_sheet_c094d70d.png" alt="Lyra Death">
+                <h4>Death Animation</h4>
+                <p>8 frames - Defeat sequence</p>
+            </div>
+        </div>
+        <div class="hero-stats">
+            <div class="stat-row"><span>HP: 380</span><span>ATK: 30</span><span>DEF: 15</span><span>SPD: 95</span><span>CRIT: 3%</span></div>
+        </div>
+
+        <h3>Ronan - Ironclad Sentinel</h3>
+        <p style="color: #a8dadc; margin-bottom: 15px;">Tank / Defender | Shield & Mace | Former Captain</p>
+        <div class="asset-grid">
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Ronan_tank_character_sprite_09614f5a.png" alt="Ronan Character">
+                <h4>Character Portrait</h4>
+                <p>Base character design</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Ronan_walk_animation_sheet_9d5fd130.png" alt="Ronan Walk">
+                <h4>Walk Animation</h4>
+                <p>6 frames - Heavy armored walk</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Ronan_attack_animation_sheet_57a0d8fd.png" alt="Ronan Attack">
+                <h4>Attack Animation</h4>
+                <p>8 frames - Shield bash</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Ronan_skill_animation_sheet_fd1229cb.png" alt="Ronan Skill">
+                <h4>Unbreakable Bulwark Skill</h4>
+                <p>10 frames - Defensive buff</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Ronan_hit_animation_sheet_ecaeb960.png" alt="Ronan Hit">
+                <h4>Hit Animation</h4>
+                <p>3 frames - Taking damage</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Ronan_death_animation_sheet_53d24eda.png" alt="Ronan Death">
+                <h4>Death Animation</h4>
+                <p>8 frames - Defeat sequence</p>
+            </div>
+        </div>
+        <div class="hero-stats">
+            <div class="stat-row"><span>HP: 700</span><span>ATK: 35</span><span>DEF: 35</span><span>SPD: 85</span><span>CRIT: 2%</span></div>
+        </div>
+
+        <h3>Cira - Stormcaller</h3>
+        <p style="color: #a8dadc; margin-bottom: 15px;">Burst Mage / AoE | Elemental Orbs | Prodigy</p>
+        <div class="asset-grid">
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Cira_mage_character_sprite_84c9f07c.png" alt="Cira Character">
+                <h4>Character Portrait</h4>
+                <p>Base character design</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Cira_walk_animation_sheet_e5a60a9e.png" alt="Cira Walk">
+                <h4>Walk Animation</h4>
+                <p>6 frames - Mystical walk</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Cira_attack_animation_sheet_4797b545.png" alt="Cira Attack">
+                <h4>Attack Animation</h4>
+                <p>6 frames - Orb projectile</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Cira_spell_animation_sheet_9bc6e280.png" alt="Cira Spell">
+                <h4>Arcane Missiles Skill</h4>
+                <p>10 frames - Magic casting</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Cira_hit_animation_sheet_934ff38e.png" alt="Cira Hit">
+                <h4>Hit Animation</h4>
+                <p>3 frames - Taking damage</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Cira_death_animation_sheet_29908e6e.png" alt="Cira Death">
+                <h4>Death Animation</h4>
+                <p>8 frames - Defeat sequence</p>
+            </div>
+        </div>
+        <div class="hero-stats">
+            <div class="stat-row"><span>HP: 350</span><span>ATK: 55</span><span>DEF: 12</span><span>SPD: 90</span><span>CRIT: 8%</span></div>
+        </div>
+
+        <h3>Milo - Shadowstep</h3>
+        <p style="color: #a8dadc; margin-bottom: 15px;">Rogue / Single-Target DPS | Dual Daggers | Ex-Thief</p>
+        <div class="asset-grid">
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Milo_rogue_character_sprite_6bf87aa4.png" alt="Milo Character">
+                <h4>Character Portrait</h4>
+                <p>Base character design</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Milo_walk_animation_sheet_19809d72.png" alt="Milo Walk">
+                <h4>Walk Animation</h4>
+                <p>6 frames - Stealthy walk</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Milo_attack_animation_sheet_8591a1de.png" alt="Milo Attack">
+                <h4>Dagger Attack</h4>
+                <p>8 frames - Rapid slashes</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Milo_skill_animation_sheet_531793a5.png" alt="Milo Skill">
+                <h4>Shadowstep Skill</h4>
+                <p>6 frames - Teleport dash</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Milo_hit_animation_sheet_706f6eeb.png" alt="Milo Hit">
+                <h4>Hit Animation</h4>
+                <p>3 frames - Taking damage</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Milo_death_animation_sheet_e883feda.png" alt="Milo Death">
+                <h4>Death Animation</h4>
+                <p>8 frames - Defeat sequence</p>
+            </div>
+        </div>
+        <div class="hero-stats">
+            <div class="stat-row"><span>HP: 420</span><span>ATK: 50</span><span>DEF: 18</span><span>SPD: 120</span><span>CRIT: 12%</span></div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>👾 Enemy Characters</h2>
+
+        <h3>Shade - Basic Enemy</h3>
+        <div class="asset-grid">
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Basic_shade_enemy_sprite_a04ae306.png" alt="Shade Enemy">
+                <h4>Enemy Portrait</h4>
+                <p>Shadow creature design</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Shade_idle_animation_sheet_a33a3b10.png" alt="Shade Idle">
+                <h4>Idle Animation</h4>
+                <p>4 frames - Floating idle</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Shade_enemy_walk_animation_a769df85.png" alt="Shade Walk">
+                <h4>Walk Animation</h4>
+                <p>6 frames - Floating movement</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Shade_enemy_attack_animation_0542bf54.png" alt="Shade Attack">
+                <h4>Attack Animation</h4>
+                <p>6 frames - Shadow assault</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Shade_enemy_death_animation_bacb65d7.png" alt="Shade Death">
+                <h4>Death Animation</h4>
+                <p>6 frames - Dissipation</p>
             </div>
         </div>
 
-        <div id="menu-screen" class="screen">
-            <div class="menu-content">
-                <h1>ECLIPSE REBORN</h1>
-                <p class="subtitle">Chronicles of the Lost Sun</p>
-                <button class="menu-btn" onclick="game.startStory()">Start Adventure</button>
-                <button class="menu-btn" onclick="game.showHeroSelect()">Select Hero</button>
-                <button class="menu-btn" onclick="game.showSanctuary()">Sanctuary</button>
-                <div class="game-info">
-                    <p>A 2D Action RPG - Touch to Play</p>
-                </div>
+        <h3>Gorath - Shade Warden (Boss)</h3>
+        <div class="asset-grid">
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Gorath_boss_enemy_sprite_978e28a4.png" alt="Gorath Boss">
+                <h4>Boss Portrait</h4>
+                <p>First boss design</p>
             </div>
-        </div>
-
-        <div id="story-screen" class="screen">
-            <div class="story-content">
-                <div id="story-text"></div>
-                <button class="story-btn" onclick="game.continueStory()">Continue</button>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Gorath_idle_animation_sheet_32216dbf.png" alt="Gorath Idle">
+                <h4>Idle Animation</h4>
+                <p>4 frames - Menacing stance</p>
             </div>
-        </div>
-
-        <div id="hero-select-screen" class="screen">
-            <div class="hero-select-content">
-                <h2>Choose Your Hero</h2>
-                <div id="hero-grid"></div>
-                <button class="back-btn" onclick="game.showMenu()">Back</button>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Gorath_walk_animation_sheet_4f7bdb19.png" alt="Gorath Walk">
+                <h4>Walk Animation</h4>
+                <p>6 frames - Heavy boss walk</p>
             </div>
-        </div>
-
-        <div id="sanctuary-screen" class="screen">
-            <canvas id="sanctuary-canvas"></canvas>
-            <div class="sanctuary-ui">
-                <div class="sanctuary-header">
-                    <h2>SANCTUARY</h2>
-                    <div class="resources">
-                        <span class="resource gold"><span id="gold-amount">1500</span> Gold</span>
-                        <span class="resource shards"><span id="shard-amount">25</span> Shards</span>
-                    </div>
-                </div>
-                <div class="building-grid">
-                    <div class="building" onclick="game.selectBuilding('barracks')">
-                        <h3>Barracks</h3>
-                        <p class="building-level">Level <span id="barracks-level">1</span></p>
-                        <p class="building-desc">Train heroes</p>
-                    </div>
-                    <div class="building" onclick="game.selectBuilding('workshop')">
-                        <h3>Workshop</h3>
-                        <p class="building-level">Level <span id="workshop-level">1</span></p>
-                        <p class="building-desc">Craft gear</p>
-                    </div>
-                    <div class="building" onclick="game.selectBuilding('reactor')">
-                        <h3>Shard Reactor</h3>
-                        <p class="building-level">Level <span id="reactor-level">1</span></p>
-                        <p class="building-desc">Generate shards</p>
-                    </div>
-                    <div class="building" onclick="game.selectBuilding('treasury')">
-                        <h3>Treasury</h3>
-                        <p class="building-level">Level <span id="treasury-level">1</span></p>
-                        <p class="building-desc">Generate gold</p>
-                    </div>
-                </div>
-                <button class="back-btn" onclick="game.showMenu()">Back to Menu</button>
-                <button class="battle-btn" onclick="game.startBattle()">Go to Battle</button>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Gorath_boss_attack_animation_53e8f026.png" alt="Gorath Attack">
+                <h4>Attack Animation</h4>
+                <p>12 frames - Epic assault</p>
             </div>
-        </div>
-
-        <div id="combat-screen" class="screen">
-            <canvas id="game-canvas"></canvas>
-            <div class="combat-hud">
-                <div class="top-hud">
-                    <div class="hero-stats">
-                        <div class="hero-name" id="hero-name">Auron</div>
-                        <div class="stat-bar hp-bar">
-                            <div class="stat-label">HP</div>
-                            <div class="stat-bar-bg">
-                                <div class="stat-bar-fill" id="hp-bar" style="width: 100%"></div>
-                            </div>
-                            <div class="stat-value" id="hp-value">500/500</div>
-                        </div>
-                        <div class="stat-bar xp-bar">
-                            <div class="stat-label">XP</div>
-                            <div class="stat-bar-bg">
-                                <div class="stat-bar-fill" id="xp-bar" style="width: 0%"></div>
-                            </div>
-                            <div class="stat-value" id="level-value">Lv 1</div>
-                        </div>
-                    </div>
-                    <div class="wave-info">
-                        <div id="wave-text">Wave 1/3</div>
-                        <div id="enemy-count">Enemies: 3</div>
-                    </div>
-                </div>
-
-                <div class="controls">
-                    <div class="joystick-container">
-                        <div class="joystick-bg" id="joystick-bg">
-                            <div class="joystick-knob" id="joystick-knob"></div>
-                        </div>
-                    </div>
-                    <div class="skill-buttons">
-                        <button class="skill-btn" id="skill1-btn" ontouchstart="game.useSkill(1)" ontouchend="game.resetSkill()">
-                            <span class="skill-key">SK1</span>
-                            <div class="cooldown-overlay" id="skill1-cd"></div>
-                        </button>
-                        <button class="skill-btn" id="skill2-btn" ontouchstart="game.useSkill(2)" ontouchend="game.resetSkill()">
-                            <span class="skill-key">SK2</span>
-                            <div class="cooldown-overlay" id="skill2-cd"></div>
-                        </button>
-                        <button class="skill-btn ultimate-btn" id="ultimate-btn" ontouchstart="game.useUltimate()" ontouchend="game.resetSkill()">
-                            <span class="skill-key">ULT</span>
-                            <div class="cooldown-overlay" id="ultimate-cd"></div>
-                        </button>
-                        <button class="skill-btn attack-btn" id="attack-btn" ontouchstart="game.attack()" ontouchend="game.resetSkill()">
-                            <span class="skill-key">ATK</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="victory-screen" class="screen">
-            <div class="result-content">
-                <h1>VICTORY!</h1>
-                <div class="rewards">
-                    <h3>Rewards</h3>
-                    <p><span class="reward-item">+<span id="reward-xp">150</span> XP</span></p>
-                    <p><span class="reward-item">+<span id="reward-gold">300</span> Gold</span></p>
-                    <p><span class="reward-item">+<span id="reward-loot">5</span> Materials</span></p>
-                </div>
-                <button class="menu-btn" onclick="game.showSanctuary()">Return to Sanctuary</button>
-                <button class="menu-btn" onclick="game.startBattle()">Next Battle</button>
-            </div>
-        </div>
-
-        <div id="defeat-screen" class="screen">
-            <div class="result-content">
-                <h1>DEFEATED</h1>
-                <p>The Umbra overwhelmed you...</p>
-                <button class="menu-btn" onclick="game.showSanctuary()">Return to Sanctuary</button>
-                <button class="menu-btn" onclick="game.startBattle()">Try Again</button>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Gorath_death_animation_sheet_800a8a06.png" alt="Gorath Death">
+                <h4>Death Animation</h4>
+                <p>16 frames - Epic boss defeat</p>
             </div>
         </div>
     </div>
 
-    <script src="js/data.js"></script>
-    <script src="js/game.js"></script>
+    <div class="section">
+        <h2>🌍 Environment Assets</h2>
+        <div class="asset-grid">
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Sanctuary_base_background_8afc0930.png" alt="Sanctuary">
+                <h4>Sanctuary Background</h4>
+                <p>Base building screen - 16:9</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Combat_forest_background_e6c04d00.png" alt="Combat Forest">
+                <h4>Combat Forest Background</h4>
+                <p>Battle stage environment - 16:9</p>
+            </div>
+            <div class="asset-card">
+                <img src="attached_assets/generated_images/Game_UI_elements_pack_9a9c8f3f.png" alt="UI Elements">
+                <h4>UI Elements Pack</h4>
+                <p>HUD, buttons, bars - 16:9</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="usage-note">
+            <h3>📦 How to Use These Assets</h3>
+            <p style="line-height: 1.8; color: #e0e0e0; margin: 15px 0;">
+                1. <strong>Download</strong>: All assets are in <code>attached_assets/generated_images/</code><br>
+                2. <strong>Import to Unity</strong>: Copy to <code>Assets/Sprites/</code> folder<br>
+                3. <strong>Sprite Settings</strong>: Set texture type to "Sprite (2D and UI)", PPU to 100<br>
+                4. <strong>Animation Sheets</strong>: Use Unity's Sprite Editor to slice frames<br>
+                5. <strong>Animator Setup</strong>: Follow <code>unity_scripts/AnimatorSetup.txt</code><br>
+                6. <strong>Assembly Guide</strong>: See <code>playable_demo/README.md</code> for complete setup
+            </p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📚 Additional Resources</h2>
+        <p style="line-height: 1.8; color: #e0e0e0;">
+            <strong>Game Design:</strong> See <code>design.md</code> for complete lore, mechanics, and progression<br>
+            <strong>Unity Scripts:</strong> 6 production-ready C# scripts in <code>unity_scripts/</code><br>
+            <strong>Data Config:</strong> <code>data/game_config.json</code> and <code>data/hero_templates.json</code><br>
+            <strong>Asset List:</strong> <code>assets/asset_list.csv</code> - Complete inventory (150+ assets)<br>
+            <strong>Monetization:</strong> <code>monetization/monetization_plan.md</code> - IAP and ads strategy
+        </p>
+    </div>
+
 </body>
 </html>

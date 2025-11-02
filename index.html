@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Eclipse Reborn: Chronicles of the Lost Sun</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="game-container">
+        <div id="loading-screen" class="screen active">
+            <div class="loading-content">
+                <h1>ECLIPSE REBORN</h1>
+                <p class="subtitle">Chronicles of the Lost Sun</p>
+                <div class="loading-bar">
+                    <div class="loading-progress"></div>
+                </div>
+                <p class="loading-text">Loading...</p>
+            </div>
+        </div>
+
+        <div id="menu-screen" class="screen">
+            <div class="menu-content">
+                <h1>ECLIPSE REBORN</h1>
+                <p class="subtitle">Chronicles of the Lost Sun</p>
+                <button class="menu-btn" onclick="game.startStory()">Start Adventure</button>
+                <button class="menu-btn" onclick="game.showHeroSelect()">Select Hero</button>
+                <button class="menu-btn" onclick="game.showSanctuary()">Sanctuary</button>
+                <div class="game-info">
+                    <p>A 2D Action RPG - Touch to Play</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="story-screen" class="screen">
+            <div class="story-content">
+                <div id="story-text"></div>
+                <button class="story-btn" onclick="game.continueStory()">Continue</button>
+            </div>
+        </div>
+
+        <div id="hero-select-screen" class="screen">
+            <div class="hero-select-content">
+                <h2>Choose Your Hero</h2>
+                <div id="hero-grid"></div>
+                <button class="back-btn" onclick="game.showMenu()">Back</button>
+            </div>
+        </div>
+
+        <div id="sanctuary-screen" class="screen">
+            <canvas id="sanctuary-canvas"></canvas>
+            <div class="sanctuary-ui">
+                <div class="sanctuary-header">
+                    <h2>SANCTUARY</h2>
+                    <div class="resources">
+                        <span class="resource gold"><span id="gold-amount">1500</span> Gold</span>
+                        <span class="resource shards"><span id="shard-amount">25</span> Shards</span>
+                    </div>
+                </div>
+                <div class="building-grid">
+                    <div class="building" onclick="game.selectBuilding('barracks')">
+                        <h3>Barracks</h3>
+                        <p class="building-level">Level <span id="barracks-level">1</span></p>
+                        <p class="building-desc">Train heroes</p>
+                    </div>
+                    <div class="building" onclick="game.selectBuilding('workshop')">
+                        <h3>Workshop</h3>
+                        <p class="building-level">Level <span id="workshop-level">1</span></p>
+                        <p class="building-desc">Craft gear</p>
+                    </div>
+                    <div class="building" onclick="game.selectBuilding('reactor')">
+                        <h3>Shard Reactor</h3>
+                        <p class="building-level">Level <span id="reactor-level">1</span></p>
+                        <p class="building-desc">Generate shards</p>
+                    </div>
+                    <div class="building" onclick="game.selectBuilding('treasury')">
+                        <h3>Treasury</h3>
+                        <p class="building-level">Level <span id="treasury-level">1</span></p>
+                        <p class="building-desc">Generate gold</p>
+                    </div>
+                </div>
+                <button class="back-btn" onclick="game.showMenu()">Back to Menu</button>
+                <button class="battle-btn" onclick="game.startBattle()">Go to Battle</button>
+            </div>
+        </div>
+
+        <div id="combat-screen" class="screen">
+            <canvas id="game-canvas"></canvas>
+            <div class="combat-hud">
+                <div class="top-hud">
+                    <div class="hero-stats">
+                        <div class="hero-name" id="hero-name">Auron</div>
+                        <div class="stat-bar hp-bar">
+                            <div class="stat-label">HP</div>
+                            <div class="stat-bar-bg">
+                                <div class="stat-bar-fill" id="hp-bar" style="width: 100%"></div>
+                            </div>
+                            <div class="stat-value" id="hp-value">500/500</div>
+                        </div>
+                        <div class="stat-bar xp-bar">
+                            <div class="stat-label">XP</div>
+                            <div class="stat-bar-bg">
+                                <div class="stat-bar-fill" id="xp-bar" style="width: 0%"></div>
+                            </div>
+                            <div class="stat-value" id="level-value">Lv 1</div>
+                        </div>
+                    </div>
+                    <div class="wave-info">
+                        <div id="wave-text">Wave 1/3</div>
+                        <div id="enemy-count">Enemies: 3</div>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <div class="joystick-container">
+                        <div class="joystick-bg" id="joystick-bg">
+                            <div class="joystick-knob" id="joystick-knob"></div>
+                        </div>
+                    </div>
+                    <div class="skill-buttons">
+                        <button class="skill-btn" id="skill1-btn" ontouchstart="game.useSkill(1)" ontouchend="game.resetSkill()">
+                            <span class="skill-key">SK1</span>
+                            <div class="cooldown-overlay" id="skill1-cd"></div>
+                        </button>
+                        <button class="skill-btn" id="skill2-btn" ontouchstart="game.useSkill(2)" ontouchend="game.resetSkill()">
+                            <span class="skill-key">SK2</span>
+                            <div class="cooldown-overlay" id="skill2-cd"></div>
+                        </button>
+                        <button class="skill-btn ultimate-btn" id="ultimate-btn" ontouchstart="game.useUltimate()" ontouchend="game.resetSkill()">
+                            <span class="skill-key">ULT</span>
+                            <div class="cooldown-overlay" id="ultimate-cd"></div>
+                        </button>
+                        <button class="skill-btn attack-btn" id="attack-btn" ontouchstart="game.attack()" ontouchend="game.resetSkill()">
+                            <span class="skill-key">ATK</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="victory-screen" class="screen">
+            <div class="result-content">
+                <h1>VICTORY!</h1>
+                <div class="rewards">
+                    <h3>Rewards</h3>
+                    <p><span class="reward-item">+<span id="reward-xp">150</span> XP</span></p>
+                    <p><span class="reward-item">+<span id="reward-gold">300</span> Gold</span></p>
+                    <p><span class="reward-item">+<span id="reward-loot">5</span> Materials</span></p>
+                </div>
+                <button class="menu-btn" onclick="game.showSanctuary()">Return to Sanctuary</button>
+                <button class="menu-btn" onclick="game.startBattle()">Next Battle</button>
+            </div>
+        </div>
+
+        <div id="defeat-screen" class="screen">
+            <div class="result-content">
+                <h1>DEFEATED</h1>
+                <p>The Umbra overwhelmed you...</p>
+                <button class="menu-btn" onclick="game.showSanctuary()">Return to Sanctuary</button>
+                <button class="menu-btn" onclick="game.startBattle()">Try Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>

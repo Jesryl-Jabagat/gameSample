@@ -1,0 +1,75 @@
+You are a senior mobile game developer, system designer, and Unity C# engineer. Build a complete developer bundle for a mobile 2D action RPG titled:
+
+  ECLIPSE REBORN: Chronicles of the Lost Sun
+
+Requirements:
+- Target: Android & iOS mobile (Unity C# project conventions). If engine-specific binaries can't be created, output all source code, assets listings, JSON, and clear instructions so the project can be assembled in Unity.
+- Gameplay: Free-to-play, playable without paying. Include optional limited rewarded-ads for small bonuses and many top-up (IAP) options for convenience/cosmetics. Short session loops (3–7 minutes), base-building (Sanctuary), and real-time touch combat.
+- Tone: Hand-painted chibi/HD-2D pixel style. Keep design mobile-friendly (touch, button sizes, low memory).
+
+Output required (create these files in the Replit workspace or present them as code/text outputs):
+
+1) /design.md — Full design document (structured headings). Include:
+   - One-paragraph pitch, core loop, session and retention targets.
+   - World & lore summary, three main story arcs, three factions, 5 sample heroes with roles.
+   - Gameplay systems: combat, stats, XP curve (include numeric XP table for levels 1–20), base nurturing design, idle/offline production, crafting.
+   - Monetization: rewarded ads strategy (what rewards, limits per day), IAP top-ups list (names, exact effects, pricing tiers in USD and in-game currency prices), VIP pass, battle pass, cosmetic bundles, and fairness notes.
+   - UX flow for purchases, ad flows, and anti-exploit considerations.
+
+2) /data/game_config.json — Core numeric tuning and data:
+   - XP formula and level table for 1–50.
+   - Damage formula constants, defense formula, crit multipliers.
+   - Building base costs and production rates (base_costs, growth factors).
+   - Currency definitions (gold, crystals, solar shards/premium).
+
+3) /data/hero_templates.json — 5 hero definitions (Auron, Lyra, Ronan, Cira, Milo) with:
+   - Stats at level 1, growth per level, skills (with multipliers, cooldowns, cast times), animation frame counts (recommended), and role tags.
+
+4) /assets/asset_list.csv — Complete asset inventory table with columns:
+   - asset_id, type (sprite/vfx/sfx/ui), recommended_format, resolution, frames (if sprite sheet), notes (layer, pivot).
+   - Include placeholders for all characters, VFX, environment tilesets, UI sprites, and audio.
+
+5) /unity_scripts/ — Provide production-ready C# source files (well-commented) for:
+   - PlayerController.cs — touch joystick movement, dash, basic attack, skill input mapping, animation parameter setting.
+   - AnimatorSetup.txt — description of Animator parameters, state machine diagram, and animation event hooks with the exact function names to call from events.
+   - CombatSystem.cs — damage calc, crit, DOT, status application; make methods deterministic and testable.
+   - XPSystem.cs — add_xp, xp_to_next calculation, level_up routine with stat allocation.
+   - BaseManager.cs — building production tick, offline accumulation (using last_saved_timestamp), upgrade method (with instant-upgrade IAP hook).
+   - ShopManager.cs — IAP stubs, rewarded-ad hook, purchase flow with server-sync pseudo code and anti-duplication checks.
+   - SaveLoadManager.cs — JSON save structure, offline production reconciliation, and sample local save data.
+
+6) /ui/mockups/ — Text descriptions or ASCII mockups (or base64 placeholder PNGs) of:
+   - Mobile HUD layout: joystick, skill buttons, auto-toggle, mini-map, base button.
+   - Base screen layout: building grid, upgrade panel, production timers with watch-ad button for +X% bonus.
+   - Shop layout: tabs for Top-up, Bundles, Battle Pass, Offers.
+
+7) /monetization/monetization_plan.md — Explicit list of monetization products with exact values:
+   - Rewarded-ads: max 3 per day free players, each gives x gold or y resource pack; optional ad for double offline for 1 hour.
+   - IAP items: example prices and exact in-game benefits:
+       * Starter Pack ($4.99): 1200 shards + 3x XP boosters (1h) + exclusive skin
+       * Progression Boost ($9.99): instant base upgrade kit + 7-day XP+10%
+       * Solar Blessing Pass ($29.99/month): daily shards, VIP perks (reduced timers), exclusive mount (cosmetic)
+       * Legendary Chest ($49.99): guaranteed legendary weapon + cosmetic.
+   - Battle Pass (free + premium tracks): free track gives small rewards; premium track gives skins, shards, and skip tickets.
+   - Keep all game-play altering items optional; include balance notes so F2P progress is slower but feasible.
+
+8) /server/pseudo_api.txt — Server sync pseudocode and endpoints:
+   - endpoints: /purchase, /redeem_reward, /save_state, /claim_offline
+   - For purchases: verify receipts, idempotency token, timestamp checks.
+   - For ads: issue ephemeral signed reward token to prevent replay.
+
+9) /playable_demo/README.md — Instructions to assemble a minimal playable prototype in Unity:
+   - How to import spritesheets, set up Animator with provided parameters, attach PlayerController, and run a simple scene with one hero, one enemy, and base UI button.
+   - Provide minimal scene setup steps, GameObjects required, and demo input mapping for mobile (Unity Remote or on-device).
+
+10) /README.md — Project summary and step-by-step runbook for a small team to pick up and finish the prototype in 2–4 sprints (developer tasks, art tasks, audio tasks, QA checklist).
+
+Constraints & style:
+- Use clear, actionable code comments and keep code modular (no monolithic classes). Keep memory and GC considerations in mind for mobile (use object pooling for projectiles/VFX).
+- For monetization, emphasize fairness: small ad rewards, many non-pay ways to obtain resources, and top-ups are mostly convenience/skins/time-savers.
+- Provide concrete numeric values; avoid “tune later” placeholders. Use realistic mobile friendly numbers (e.g., XP per level, production per hour, ad limits).
+- Output everything in plain files or code blocks that can be saved directly.
+
+If you can generate any placeholder sprites or simple PNG mockups, create 64x64 hero placeholders and simple UI button placeholders in /ui/mockups as base64-encoded PNG files and reference them in /assets/asset_list.csv.
+
+Now produce the full bundle as described, starting with /design.md content followed by the most important code files (PlayerController.cs, CombatSystem.cs, XPSystem.cs) and the JSON files. Keep replies focused and provide file contents ready to be saved.

@@ -4,6 +4,12 @@
 
 This Replit workspace contains a **complete development bundle** for "Eclipse Reborn: Chronicles of the Lost Sun" - a mobile 2D action RPG for Android and iOS.
 
+**⚠️ IMPORTANT:** This is a Unity C# source code bundle, not a runnable web application. To use this bundle:
+1. Download all files from this Replit workspace
+2. Import into Unity 2021.3 LTS or newer
+3. Follow the assembly instructions in `playable_demo/README.md`
+4. Build for Android/iOS devices
+
 **What's Included:**
 - Full game design document (150+ pages)
 - 6 production-ready Unity C# scripts

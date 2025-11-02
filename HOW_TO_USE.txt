@@ -1,0 +1,76 @@
+===================================================================
+HOW TO USE THIS DEVELOPMENT BUNDLE
+===================================================================
+
+This Replit workspace contains Unity C# source code and documentation
+for Eclipse Reborn. It is NOT a runnable web application.
+
+-------------------------------------------------------------------
+STEP 1: DOWNLOAD FILES
+-------------------------------------------------------------------
+
+Download all files from this Replit workspace to your local machine:
+
+1. Click the three dots (⋮) menu in Replit
+2. Select "Download as zip"
+3. Extract the zip file to your preferred location
+
+-------------------------------------------------------------------
+STEP 2: OPEN IN UNITY
+-------------------------------------------------------------------
+
+1. Install Unity 2021.3 LTS or newer from unity.com
+2. Open Unity Hub
+3. Click "Add" → Navigate to extracted folder
+4. Open the project
+
+-------------------------------------------------------------------
+STEP 3: FOLLOW ASSEMBLY GUIDE
+-------------------------------------------------------------------
+
+Open and follow the step-by-step instructions in:
+
+📄 playable_demo/README.md
+
+This guide walks you through:
+- Creating Unity project structure
+- Importing C# scripts
+- Setting up JSON configuration
+- Building combat demo scene
+- Testing on Android/iOS devices
+
+-------------------------------------------------------------------
+QUICK FILE REFERENCE
+-------------------------------------------------------------------
+
+📋 Documentation:
+- design.md - Complete game design
+- README.md - Project overview
+- monetization/monetization_plan.md - Monetization strategy
+
+💻 Code:
+- unity_scripts/*.cs - All C# scripts
+- unity_scripts/README_SCRIPTS.md - Setup instructions
+- data/*.json - Configuration files
+
+🎨 Assets:
+- assets/asset_list.csv - Complete asset inventory
+
+🖥️ Backend:
+- server/pseudo_api.txt - Server API pseudocode
+
+-------------------------------------------------------------------
+SUPPORT
+-------------------------------------------------------------------
+
+Review documentation in this repository first.
+Check Unity forums for engine-specific questions.
+
+-------------------------------------------------------------------
+LICENSE
+-------------------------------------------------------------------
+
+Open for commercial and non-commercial use.
+Attribution appreciated but not required.
+
+===================================================================

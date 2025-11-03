@@ -1,0 +1,633 @@
+===================================================================
+SERVER-SIDE API PSEUDOCODE
+Eclipse Reborn: Chronicles of the Lost Sun
+===================================================================
+
+This document contains pseudocode for backend endpoints required for
+IAP validation, ad rewards, save state management, and anti-exploit measures.
+
+NOTE: This is pseudocode/reference implementation. In production, use
+a secure backend framework (Node.js/Express, Python/Flask, etc.) with
+proper authentication, rate limiting, and database transactions.
+
+-------------------------------------------------------------------
+TECH STACK RECOMMENDATIONS
+-------------------------------------------------------------------
+
+Backend: Node.js + Express OR Python + Flask
+Database: PostgreSQL (player data, transactions) + Redis (session cache)
+Authentication: JWT (JSON Web Tokens) for session management
+Hosting: AWS / Google Cloud / Firebase
+CDN: CloudFlare (for static assets, DDoS protection)
+
+-------------------------------------------------------------------
+ENDPOINT 1: /api/purchase (IAP Receipt Validation)
+-------------------------------------------------------------------
+
+METHOD: POST
+AUTH: Required (JWT token in header)
+RATE LIMIT: 10 requests/minute per player
+
+REQUEST BODY:
+{
+  "player_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "product_id": "starter_pack_001",
+  "platform": "google_play",  // or "app_store"
+  "receipt": "base64_encoded_receipt_data...",
+  "idempotency_token": "unique_token_12345",
+  "timestamp": "2025-11-02T12:34:56.789Z"
+}
+
+PSEUDOCODE:
+
+function handlePurchase(req, res) {
+    // 1. Validate request
+    if (!req.body.player_id || !req.body.receipt) {
+        return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    // 2. Check idempotency token (prevent duplicate processing)
+    const existingTransaction = database.query(
+        "SELECT * FROM transactions WHERE idempotency_token = ?",
+        [req.body.idempotency_token]
+    );
+
+    if (existingTransaction) {
+        return res.status(200).json({
+            status: "already_processed",
+            transaction_id: existingTransaction.id
+        });
+    }
+
+    // 3. Validate receipt with platform
+    let validationResult;
+
+    if (req.body.platform === "google_play") {
+        validationResult = validateGooglePlayReceipt(req.body.receipt);
+    } else if (req.body.platform === "app_store") {
+        validationResult = validateAppStoreReceipt(req.body.receipt);
+    } else {
+        return res.status(400).json({ error: "Invalid platform" });
+    }
+
+    // 4. Check validation result
+    if (!validationResult.valid) {
+        // Log failed validation for CS review
+        database.insert("failed_validations", {
+            player_id: req.body.player_id,
+            product_id: req.body.product_id,
+            receipt: req.body.receipt,
+            error: validationResult.error,
+            timestamp: new Date()
+        });
+
+        return res.status(400).json({
+            status: "validation_failed",
+            error: validationResult.error
+        });
+    }
+
+    // 5. Check if one-time purchase already owned
+    if (isOneTimePurchase(req.body.product_id)) {
+        const alreadyOwned = database.query(
+            "SELECT * FROM purchases WHERE player_id = ? AND product_id = ?",
+            [req.body.player_id, req.body.product_id]
+        );
+
+        if (alreadyOwned) {
+            return res.status(400).json({
+                status: "already_owned",
+                error: "This one-time purchase has already been made"
+            });
+        }
+    }
+
+    // 6. Begin database transaction (atomic operation)
+    database.beginTransaction();
+
+    try {
+        // 7. Log transaction
+        const transactionId = database.insert("transactions", {
+            player_id: req.body.player_id,
+            product_id: req.body.product_id,
+            platform: req.body.platform,
+            receipt_hash: sha256(req.body.receipt),
+            idempotency_token: req.body.idempotency_token,
+            amount_usd: getProductPrice(req.body.product_id),
+            timestamp: new Date(),
+            status: "completed"
+        });
+
+        // 8. Grant rewards
+        grantPurchaseRewards(req.body.player_id, req.body.product_id);
+
+        // 9. Mark one-time purchases as owned
+        if (isOneTimePurchase(req.body.product_id)) {
+            database.insert("purchases", {
+                player_id: req.body.player_id,
+                product_id: req.body.product_id,
+                purchased_at: new Date()
+            });
+        }
+
+        // 10. Commit transaction
+        database.commit();
+
+        // 11. Return success
+        return res.status(200).json({
+            status: "success",
+            transaction_id: transactionId,
+            rewards: getProductRewards(req.body.product_id)
+        });
+
+    } catch (error) {
+        // Rollback on error
+        database.rollback();
+
+        // Log error for monitoring
+        console.error("Purchase processing error:", error);
+
+        return res.status(500).json({
+            status: "error",
+            error: "Failed to process purchase. Please contact support.",
+            reference: transactionId
+        });
+    }
+}
+
+function validateGooglePlayReceipt(receipt) {
+    // Use Google Play Developer API
+    // https://developers.google.com/android-publisher/api-ref/rest/v3/purchases.products/get
+
+    const response = httpRequest({
+        method: "GET",
+        url: `https://androidpublisher.googleapis.com/androidpublisher/v3/applications/${PACKAGE_NAME}/purchases/products/${PRODUCT_ID}/tokens/${PURCHASE_TOKEN}`,
+        headers: {
+            "Authorization": `Bearer ${GOOGLE_API_KEY}`
+        }
+    });
+
+    if (response.status === 200 && response.data.purchaseState === 0) {
+        return { valid: true, orderId: response.data.orderId };
+    }
+
+    return { valid: false, error: "Invalid receipt" };
+}
+
+function validateAppStoreReceipt(receipt) {
+    // Use Apple App Store Server API
+    // https://developer.apple.com/documentation/appstorereceipts/verifyreceipt
+
+    const response = httpRequest({
+        method: "POST",
+        url: "https://buy.itunes.apple.com/verifyReceipt",  // Production
+        // url: "https://sandbox.itunes.apple.com/verifyReceipt",  // Sandbox for testing
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            "receipt-data": receipt,
+            "password": APPLE_SHARED_SECRET,
+            "exclude-old-transactions": true
+        })
+    });
+
+    if (response.status === 200 && response.data.status === 0) {
+        return { valid: true, transactionId: response.data.latest_receipt_info[0].transaction_id };
+    }
+
+    return { valid: false, error: `Apple error code: ${response.data.status}` };
+}
+
+function grantPurchaseRewards(playerId, productId) {
+    const rewards = getProductRewards(productId);
+
+    if (rewards.solar_shards) {
+        database.query(
+            "UPDATE players SET solar_shards = solar_shards + ? WHERE player_id = ?",
+            [rewards.solar_shards, playerId]
+        );
+    }
+
+    if (rewards.gold) {
+        database.query(
+            "UPDATE players SET gold = gold + ? WHERE player_id = ?",
+            [rewards.gold, playerId]
+        );
+    }
+
+    if (rewards.items) {
+        for (let item of rewards.items) {
+            database.insert("player_inventory", {
+                player_id: playerId,
+                item_id: item.id,
+                quantity: item.quantity
+            });
+        }
+    }
+
+    // Grant VIP if subscription
+    if (productId === "monthly_sub_001") {
+        const expiryDate = new Date();
+        expiryDate.setMonth(expiryDate.getMonth() + 1);
+
+        database.query(
+            "UPDATE players SET is_vip = true, vip_expiry = ? WHERE player_id = ?",
+            [expiryDate, playerId]
+        );
+    }
+}
+
+-------------------------------------------------------------------
+ENDPOINT 2: /api/redeem_reward (Rewarded Ad Validation)
+-------------------------------------------------------------------
+
+METHOD: POST
+AUTH: Required (JWT token)
+RATE LIMIT: 20 requests/hour per player
+
+REQUEST BODY:
+{
+  "player_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "reward_type": "resource_pack",  // or "production_boost", "offline_doubler"
+  "timestamp": "2025-11-02T12:34:56.789Z"
+}
+
+PSEUDOCODE:
+
+function handleRedeemReward(req, res) {
+    // 1. Request reward token
+    const token = generateRewardToken(req.body.player_id, req.body.reward_type);
+
+    // 2. Return token to client (expires in 60 seconds)
+    return res.status(200).json({
+        reward_token: token,
+        expires_at: new Date(Date.now() + 60000).toISOString()
+    });
+}
+
+function generateRewardToken(playerId, rewardType) {
+    const timestamp = Date.now();
+    const nonce = randomUUID();
+
+    // Create HMAC signature
+    const payload = `${playerId}:${rewardType}:${timestamp}:${nonce}`;
+    const signature = HMAC_SHA256(payload, SERVER_SECRET_KEY);
+
+    // Return base64-encoded token
+    const token = base64Encode(JSON.stringify({
+        player_id: playerId,
+        reward_type: rewardType,
+        timestamp: timestamp,
+        nonce: nonce,
+        signature: signature
+    }));
+
+    // Store token in Redis with 60-second TTL
+    redis.setex(`reward_token:${nonce}`, 60, token);
+
+    return token;
+}
+
+METHOD: POST (Step 2: Claim reward with token)
+ENDPOINT: /api/claim_reward
+
+REQUEST BODY:
+{
+  "player_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "reward_token": "base64_encoded_token..."
+}
+
+PSEUDOCODE:
+
+function handleClaimReward(req, res) {
+    // 1. Decode token
+    const tokenData = JSON.parse(base64Decode(req.body.reward_token));
+
+    // 2. Validate player ID matches
+    if (tokenData.player_id !== req.body.player_id) {
+        return res.status(403).json({ error: "Player ID mismatch" });
+    }
+
+    // 3. Check token expiry (60 seconds)
+    const tokenAge = Date.now() - tokenData.timestamp;
+    if (tokenAge > 60000) {
+        return res.status(410).json({ error: "Reward token expired" });
+    }
+
+    // 4. Validate HMAC signature
+    const payload = `${tokenData.player_id}:${tokenData.reward_type}:${tokenData.timestamp}:${tokenData.nonce}`;
+    const expectedSignature = HMAC_SHA256(payload, SERVER_SECRET_KEY);
+
+    if (tokenData.signature !== expectedSignature) {
+        return res.status(403).json({ error: "Invalid reward token signature" });
+    }
+
+    // 5. Check token hasn't been used (prevent replay)
+    const tokenExists = redis.get(`reward_token:${tokenData.nonce}`);
+    if (!tokenExists) {
+        return res.status(410).json({ error: "Reward already claimed or token invalid" });
+    }
+
+    // 6. Delete token from Redis (consume it)
+    redis.del(`reward_token:${tokenData.nonce}`);
+
+    // 7. Check daily ad limit
+    const adsWatched = database.query(
+        "SELECT COUNT(*) as count FROM ad_claims WHERE player_id = ? AND claimed_at >= CURRENT_DATE",
+        [req.body.player_id]
+    ).count;
+
+    const isVIP = database.query(
+        "SELECT is_vip FROM players WHERE player_id = ?",
+        [req.body.player_id]
+    ).is_vip;
+
+    const dailyLimit = isVIP ? 9999 : 3;
+
+    if (adsWatched >= dailyLimit) {
+        return res.status(429).json({ error: "Daily ad limit reached" });
+    }
+
+    // 8. Grant reward
+    let reward;
+
+    switch (tokenData.reward_type) {
+        case "resource_pack":
+            database.query(
+                "UPDATE players SET gold = gold + 500 WHERE player_id = ?",
+                [req.body.player_id]
+            );
+            database.insert("player_inventory", {
+                player_id: req.body.player_id,
+                item_id: "crafting_materials",
+                quantity: 50
+            });
+            reward = { gold: 500, crafting_materials: 50 };
+            break;
+
+        case "production_boost":
+            // Set boost expiry time
+            const boostExpiry = new Date(Date.now() + 3600000);  // 1 hour
+            database.query(
+                "UPDATE players SET production_boost_expiry = ? WHERE player_id = ?",
+                [boostExpiry, req.body.player_id]
+            );
+            reward = { boost: "50% production for 1 hour" };
+            break;
+
+        case "offline_doubler":
+            // Flag for next offline claim
+            database.query(
+                "UPDATE players SET offline_doubler_active = true WHERE player_id = ?",
+                [req.body.player_id]
+            );
+            reward = { doubler: "Next offline claim 2x" };
+            break;
+    }
+
+    // 9. Log ad claim
+    database.insert("ad_claims", {
+        player_id: req.body.player_id,
+        reward_type: tokenData.reward_type,
+        claimed_at: new Date()
+    });
+
+    // 10. Return success
+    return res.status(200).json({
+        status: "success",
+        reward: reward
+    });
+}
+
+-------------------------------------------------------------------
+ENDPOINT 3: /api/save_state (Cloud Save Sync)
+-------------------------------------------------------------------
+
+METHOD: POST
+AUTH: Required (JWT token)
+RATE LIMIT: 60 requests/hour per player
+
+REQUEST BODY:
+{
+  "player_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "save_data": { ... },  // Full save JSON (see SaveLoadManager.cs)
+  "client_timestamp": "2025-11-02T12:34:56.789Z"
+}
+
+PSEUDOCODE:
+
+function handleSaveState(req, res) {
+    // 1. Validate save data structure
+    if (!validateSaveData(req.body.save_data)) {
+        return res.status(400).json({ error: "Invalid save data format" });
+    }
+
+    // 2. Check timestamp (prevent rollback exploits)
+    const lastSave = database.query(
+        "SELECT last_saved_timestamp FROM player_saves WHERE player_id = ?",
+        [req.body.player_id]
+    );
+
+    if (lastSave && new Date(lastSave.last_saved_timestamp) > new Date(req.body.client_timestamp)) {
+        return res.status(409).json({
+            error: "Server save is newer than client save (time manipulation detected?)",
+            server_timestamp: lastSave.last_saved_timestamp
+        });
+    }
+
+    // 3. Compress save data (reduce storage size)
+    const compressedSave = gzip(JSON.stringify(req.body.save_data));
+
+    // 4. Store save in database
+    database.upsert("player_saves", {
+        player_id: req.body.player_id,
+        save_data: compressedSave,
+        last_saved_timestamp: req.body.client_timestamp,
+        updated_at: new Date()
+    });
+
+    // 5. Return success
+    return res.status(200).json({
+        status: "success",
+        saved_at: new Date().toISOString()
+    });
+}
+
+METHOD: GET
+ENDPOINT: /api/load_state?player_id={player_id}
+
+PSEUDOCODE:
+
+function handleLoadState(req, res) {
+    // 1. Get player save from database
+    const save = database.query(
+        "SELECT save_data, last_saved_timestamp FROM player_saves WHERE player_id = ?",
+        [req.query.player_id]
+    );
+
+    if (!save) {
+        return res.status(404).json({ error: "No save data found for this player" });
+    }
+
+    // 2. Decompress save data
+    const saveData = JSON.parse(gunzip(save.save_data));
+
+    // 3. Return save data
+    return res.status(200).json({
+        status: "success",
+        save_data: saveData,
+        last_saved_timestamp: save.last_saved_timestamp
+    });
+}
+
+-------------------------------------------------------------------
+ENDPOINT 4: /api/claim_offline (Offline Rewards Calculation)
+-------------------------------------------------------------------
+
+METHOD: POST
+AUTH: Required (JWT token)
+RATE LIMIT: 10 requests/hour per player
+
+REQUEST BODY:
+{
+  "player_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "last_logout_timestamp": "2025-11-02T08:00:00.000Z",
+  "current_timestamp": "2025-11-02T12:00:00.000Z"
+}
+
+PSEUDOCODE:
+
+function handleClaimOffline(req, res) {
+    // 1. Validate timestamps
+    const lastLogout = new Date(req.body.last_logout_timestamp);
+    const currentTime = new Date(req.body.current_timestamp);
+    const serverTime = new Date();
+
+    // 2. Check for time manipulation (client time vs server time)
+    const timeDiff = Math.abs(currentTime - serverTime);
+    if (timeDiff > 300000) {  // 5 minutes tolerance
+        return res.status(403).json({
+            error: "Client time does not match server time (suspected time manipulation)",
+            server_time: serverTime.toISOString()
+        });
+    }
+
+    // 3. Calculate offline duration
+    const offlineDurationMs = currentTime - lastLogout;
+    const offlineHours = offlineDurationMs / 3600000;
+
+    // 4. Get player VIP status
+    const player = database.query(
+        "SELECT is_vip, offline_doubler_active FROM players WHERE player_id = ?",
+        [req.body.player_id]
+    );
+
+    // 5. Cap offline hours (12 for free, 24 for VIP)
+    const maxOfflineHours = player.is_vip ? 24 : 12;
+    const cappedOfflineHours = Math.min(offlineHours, maxOfflineHours);
+
+    // 6. Get player buildings and calculate production
+    const buildings = database.query(
+        "SELECT * FROM player_buildings WHERE player_id = ?",
+        [req.body.player_id]
+    );
+
+    let totalGold = 0;
+    let totalShards = 0;
+    let totalMaterials = 0;
+
+    for (let building of buildings) {
+        const productionRate = getProductionRate(building.building_id, building.level);
+
+        if (building.building_id === "treasury") {
+            totalGold += productionRate * cappedOfflineHours;
+        } else if (building.building_id === "shard_reactor") {
+            totalShards += productionRate * cappedOfflineHours;
+        } else if (building.building_id === "workshop") {
+            totalMaterials += productionRate * cappedOfflineHours;
+        }
+    }
+
+    // 7. Apply offline doubler if active
+    if (player.offline_doubler_active) {
+        totalGold *= 2;
+        totalShards *= 2;
+        totalMaterials *= 2;
+
+        // Consume doubler
+        database.query(
+            "UPDATE players SET offline_doubler_active = false WHERE player_id = ?",
+            [req.body.player_id]
+        );
+    }
+
+    // 8. Grant rewards
+    database.query(
+        "UPDATE players SET gold = gold + ?, solar_shards = solar_shards + ? WHERE player_id = ?",
+        [Math.floor(totalGold), Math.floor(totalShards), req.body.player_id]
+    );
+
+    if (totalMaterials > 0) {
+        database.insert("player_inventory", {
+            player_id: req.body.player_id,
+            item_id: "crafting_materials",
+            quantity: Math.floor(totalMaterials)
+        });
+    }
+
+    // 9. Return rewards
+    return res.status(200).json({
+        status: "success",
+        offline_hours: cappedOfflineHours,
+        rewards: {
+            gold: Math.floor(totalGold),
+            solar_shards: Math.floor(totalShards),
+            crafting_materials: Math.floor(totalMaterials)
+        },
+        doubler_applied: player.offline_doubler_active
+    });
+}
+
+-------------------------------------------------------------------
+SECURITY BEST PRACTICES
+-------------------------------------------------------------------
+
+1. AUTHENTICATION:
+   - Use JWT tokens with 1-hour expiry, refresh tokens for long sessions
+   - Rotate refresh tokens on each use
+   - Invalidate all sessions on password change
+
+2. RATE LIMITING:
+   - Implement per-endpoint rate limits (see above)
+   - Use Redis for distributed rate limiting
+   - Ban IPs with suspicious activity (>100 requests/min)
+
+3. INPUT VALIDATION:
+   - Sanitize all inputs (prevent SQL injection)
+   - Validate JSON structure against schema
+   - Reject requests with excessively large payloads (>1MB)
+
+4. ENCRYPTION:
+   - Use HTTPS/TLS for all API communication
+   - Encrypt sensitive data at rest (receipts, player emails)
+   - Never log or store plaintext passwords
+
+5. LOGGING & MONITORING:
+   - Log all purchase attempts (success + failure)
+   - Alert on unusual patterns (100 purchases in 1 hour from same IP)
+   - Daily backup of transaction logs
+
+6. DATABASE SECURITY:
+   - Use prepared statements (prevent SQL injection)
+   - Principle of least privilege (API server user cannot DROP tables)
+   - Regular backups (daily + real-time replication)
+
+7. ANTI-CHEAT:
+   - Server-authoritative (never trust client for critical data)
+   - Validate timestamps against server time
+   - Log suspicious activity (report to CS team)
+
+===================================================================
+END OF SERVER-SIDE API PSEUDOCODE
+===================================================================

@@ -1,0 +1,368 @@
+{
+  "version": "1.0.0",
+  "game_title": "Eclipse Reborn: Chronicles of the Lost Sun",
+  
+  "xp_system": {
+    "formula": "100 * (level^1.8) + 50 * level",
+    "max_level": 50,
+    "level_table": {
+      "1": { "xp_required": 0, "cumulative_xp": 0 },
+      "2": { "xp_required": 150, "cumulative_xp": 150 },
+      "3": { "xp_required": 336, "cumulative_xp": 486 },
+      "4": { "xp_required": 559, "cumulative_xp": 1045 },
+      "5": { "xp_required": 820, "cumulative_xp": 1865 },
+      "6": { "xp_required": 1120, "cumulative_xp": 2985 },
+      "7": { "xp_required": 1461, "cumulative_xp": 4446 },
+      "8": { "xp_required": 1843, "cumulative_xp": 6289 },
+      "9": { "xp_required": 2267, "cumulative_xp": 8556 },
+      "10": { "xp_required": 2734, "cumulative_xp": 11290 },
+      "11": { "xp_required": 3245, "cumulative_xp": 14535 },
+      "12": { "xp_required": 3800, "cumulative_xp": 18335 },
+      "13": { "xp_required": 4401, "cumulative_xp": 22736 },
+      "14": { "xp_required": 5049, "cumulative_xp": 27785 },
+      "15": { "xp_required": 5744, "cumulative_xp": 33529 },
+      "16": { "xp_required": 6487, "cumulative_xp": 40016 },
+      "17": { "xp_required": 7279, "cumulative_xp": 47295 },
+      "18": { "xp_required": 8121, "cumulative_xp": 55416 },
+      "19": { "xp_required": 9013, "cumulative_xp": 64429 },
+      "20": { "xp_required": 9957, "cumulative_xp": 74386 },
+      "21": { "xp_required": 10953, "cumulative_xp": 85339 },
+      "22": { "xp_required": 12002, "cumulative_xp": 97341 },
+      "23": { "xp_required": 13105, "cumulative_xp": 110446 },
+      "24": { "xp_required": 14263, "cumulative_xp": 124709 },
+      "25": { "xp_required": 15476, "cumulative_xp": 140185 },
+      "26": { "xp_required": 16746, "cumulative_xp": 156931 },
+      "27": { "xp_required": 18073, "cumulative_xp": 175004 },
+      "28": { "xp_required": 19459, "cumulative_xp": 194463 },
+      "29": { "xp_required": 20904, "cumulative_xp": 215367 },
+      "30": { "xp_required": 22409, "cumulative_xp": 237776 },
+      "31": { "xp_required": 23975, "cumulative_xp": 261751 },
+      "32": { "xp_required": 25603, "cumulative_xp": 287354 },
+      "33": { "xp_required": 27293, "cumulative_xp": 314647 },
+      "34": { "xp_required": 29047, "cumulative_xp": 343694 },
+      "35": { "xp_required": 30865, "cumulative_xp": 374559 },
+      "36": { "xp_required": 32748, "cumulative_xp": 407307 },
+      "37": { "xp_required": 34697, "cumulative_xp": 442004 },
+      "38": { "xp_required": 36713, "cumulative_xp": 478717 },
+      "39": { "xp_required": 38797, "cumulative_xp": 517514 },
+      "40": { "xp_required": 40950, "cumulative_xp": 558464 },
+      "41": { "xp_required": 43172, "cumulative_xp": 601636 },
+      "42": { "xp_required": 45465, "cumulative_xp": 647101 },
+      "43": { "xp_required": 47829, "cumulative_xp": 694930 },
+      "44": { "xp_required": 50265, "cumulative_xp": 745195 },
+      "45": { "xp_required": 52774, "cumulative_xp": 797969 },
+      "46": { "xp_required": 55357, "cumulative_xp": 853326 },
+      "47": { "xp_required": 58015, "cumulative_xp": 911341 },
+      "48": { "xp_required": 60748, "cumulative_xp": 972089 },
+      "49": { "xp_required": 63558, "cumulative_xp": 1035647 },
+      "50": { "xp_required": 66446, "cumulative_xp": 1102093 }
+    },
+    "stage_xp_reward_base": 50,
+    "boss_xp_multiplier": 2.5
+  },
+
+  "combat_formulas": {
+    "damage_formula": "(ATK * skill_multiplier) * (100 / (100 + DEF)) * crit_multiplier",
+    "base_crit_damage": 2.0,
+    "legendary_crit_damage": 2.5,
+    "dodge_formula": "SPD / 10",
+    "max_dodge_chance": 0.35,
+    "status_effects": {
+      "burn": {
+        "damage_per_tick": 0.02,
+        "tick_interval": 1.0,
+        "base_duration": 4.0
+      },
+      "stun": {
+        "duration": 1.5,
+        "movement_disabled": true,
+        "attack_disabled": true
+      },
+      "shield": {
+        "absorption_percentage": 1.0,
+        "duration": 5.0
+      },
+      "attack_buff": {
+        "percentage_increase": 0.1,
+        "duration": 5.0
+      },
+      "defense_buff": {
+        "percentage_increase": 0.1,
+        "duration": 5.0
+      }
+    }
+  },
+
+  "buildings": {
+    "barracks": {
+      "base_cost": 500,
+      "base_time_seconds": 60,
+      "cost_growth_factor": 1.5,
+      "time_growth_factor": 1.3,
+      "max_level": 15,
+      "effects_per_level": {
+        "hero_stat_boost_percentage": 5
+      }
+    },
+    "workshop": {
+      "base_cost": 800,
+      "base_time_seconds": 120,
+      "cost_growth_factor": 1.5,
+      "time_growth_factor": 1.3,
+      "max_level": 12,
+      "production_per_hour": 1,
+      "production_growth_factor": 1.2,
+      "unlocks": {
+        "1": "common_uncommon_gear",
+        "4": "rare_gear",
+        "7": "epic_gear",
+        "10": "legendary_gear"
+      }
+    },
+    "shard_reactor": {
+      "base_cost": 1200,
+      "base_time_seconds": 180,
+      "cost_growth_factor": 1.5,
+      "time_growth_factor": 1.3,
+      "max_level": 10,
+      "base_production_hours": 4.0,
+      "shards_per_production": 1,
+      "production_time_reduction_per_level": 0.15,
+      "ad_boost_multiplier": 1.5,
+      "ad_boost_duration_hours": 1
+    },
+    "treasury": {
+      "base_cost": 600,
+      "base_time_seconds": 90,
+      "cost_growth_factor": 1.5,
+      "time_growth_factor": 1.3,
+      "max_level": 15,
+      "base_production_per_hour": 200,
+      "production_growth_factor": 1.2,
+      "base_offline_cap_hours": 12,
+      "vip_offline_cap_hours": 24
+    },
+    "training_grounds": {
+      "base_cost": 1000,
+      "base_time_seconds": 150,
+      "cost_growth_factor": 1.5,
+      "time_growth_factor": 1.3,
+      "max_level": 10,
+      "base_xp_per_hour": 10,
+      "xp_growth_factor": 1.25,
+      "base_hero_slots": 3,
+      "max_hero_slots": 5
+    }
+  },
+
+  "currencies": {
+    "gold": {
+      "name": "Gold",
+      "description": "Common currency for upgrades and crafting",
+      "max_cap": 9999999,
+      "sources": ["stages", "offline_production", "daily_quests", "ads"]
+    },
+    "solar_shards": {
+      "name": "Solar Shards",
+      "description": "Premium currency for instant upgrades and shop purchases",
+      "max_cap": 999999,
+      "sources": ["iap", "shard_reactor", "events", "battle_pass"],
+      "usd_conversion": 100
+    },
+    "crafting_materials": {
+      "iron_ore": {
+        "name": "Iron Ore",
+        "rarity": "common",
+        "sources": ["stages_1_10", "workshop"]
+      },
+      "arcane_dust": {
+        "name": "Arcane Dust",
+        "rarity": "uncommon",
+        "sources": ["stages_11_25", "workshop"]
+      },
+      "sunstone": {
+        "name": "Sunstone",
+        "rarity": "rare",
+        "sources": ["stages_26_40", "events"]
+      },
+      "eclipse_shard": {
+        "name": "Eclipse Shard",
+        "rarity": "epic",
+        "sources": ["stages_40_50", "bosses", "events"]
+      }
+    }
+  },
+
+  "gear_system": {
+    "slots": ["weapon", "armor", "accessory", "trinket"],
+    "rarities": {
+      "common": {
+        "color": "#FFFFFF",
+        "stat_multiplier": 1.0,
+        "drop_rate": 0.50
+      },
+      "uncommon": {
+        "color": "#1EFF00",
+        "stat_multiplier": 1.3,
+        "drop_rate": 0.30
+      },
+      "rare": {
+        "color": "#0070DD",
+        "stat_multiplier": 1.7,
+        "drop_rate": 0.15
+      },
+      "epic": {
+        "color": "#A335EE",
+        "stat_multiplier": 2.2,
+        "drop_rate": 0.04
+      },
+      "legendary": {
+        "color": "#FF8000",
+        "stat_multiplier": 3.0,
+        "drop_rate": 0.01,
+        "has_unique_passive": true
+      }
+    },
+    "enhancement": {
+      "max_level": 10,
+      "stat_increase_per_level": 0.10,
+      "cost_formula": "base_cost * (level^1.5)"
+    }
+  },
+
+  "monetization": {
+    "rewarded_ads": {
+      "daily_limit_free": 3,
+      "daily_limit_vip": 999,
+      "ad_duration_seconds": 30,
+      "rewards": {
+        "resource_pack": {
+          "gold": 500,
+          "crafting_materials": 50,
+          "daily_limit": 1
+        },
+        "production_boost": {
+          "multiplier": 1.5,
+          "duration_hours": 1,
+          "daily_limit": 1
+        },
+        "offline_doubler": {
+          "multiplier": 2.0,
+          "daily_limit": 1
+        }
+      }
+    },
+    "iap_products": {
+      "starter_pack": {
+        "id": "starter_pack_001",
+        "price_usd": 4.99,
+        "one_time_only": true,
+        "contents": {
+          "solar_shards": 1200,
+          "xp_booster_1h": 3,
+          "exclusive_skin": "dawn_voyager_auron",
+          "sweep_tickets": 10
+        }
+      },
+      "progression_boost": {
+        "id": "progression_boost_001",
+        "price_usd": 9.99,
+        "one_time_only": true,
+        "contents": {
+          "instant_base_upgrade_kit": 1,
+          "xp_buff_7day": 1,
+          "solar_shards": 2000,
+          "gold": 50000
+        }
+      },
+      "gem_packs": {
+        "small_pouch": {
+          "id": "gems_tier1",
+          "price_usd": 0.99,
+          "solar_shards": 120
+        },
+        "medium_sack": {
+          "id": "gems_tier2",
+          "price_usd": 4.99,
+          "solar_shards": 650
+        },
+        "large_chest": {
+          "id": "gems_tier3",
+          "price_usd": 9.99,
+          "solar_shards": 1400
+        },
+        "epic_hoard": {
+          "id": "gems_tier4",
+          "price_usd": 19.99,
+          "solar_shards": 3000
+        },
+        "legendary_vault": {
+          "id": "gems_tier5",
+          "price_usd": 49.99,
+          "solar_shards": 8000
+        }
+      },
+      "solar_blessing_pass": {
+        "id": "monthly_sub_001",
+        "price_usd": 29.99,
+        "duration_days": 30,
+        "auto_renew": true,
+        "benefits": {
+          "daily_shards": 100,
+          "building_timer_reduction": 0.20,
+          "offline_cap_hours": 24,
+          "unlimited_ads": true,
+          "exclusive_cosmetics": true
+        }
+      },
+      "legendary_chest": {
+        "id": "legendary_chest_001",
+        "price_usd": 49.99,
+        "weekly_offer": true,
+        "contents": {
+          "legendary_weapon_random": 1,
+          "legendary_skin_choice": 1,
+          "solar_shards": 3000,
+          "gold": 100000
+        }
+      }
+    },
+    "battle_pass": {
+      "free_track": {
+        "tier_count": 30,
+        "major_rewards": [10, 20, 30],
+        "legendary_skin_tier": 30
+      },
+      "premium_track": {
+        "price_usd": 9.99,
+        "tier_count": 30,
+        "epic_skins": 3,
+        "legendary_skins": 1,
+        "solar_shards_total": 2000,
+        "sweep_tickets": 20
+      },
+      "tier_skip_cost_shards": 150
+    }
+  },
+
+  "gameplay_constants": {
+    "stamina_system": false,
+    "sweep_ticket_daily_grant": 5,
+    "sweep_loot_multiplier": 0.8,
+    "offline_max_hours_free": 12,
+    "offline_max_hours_vip": 24,
+    "pvp_enabled": false,
+    "guild_enabled": false,
+    "co_op_enabled": false
+  },
+
+  "balance_targets": {
+    "f2p_level_20_days": 14,
+    "f2p_all_heroes_days": 21,
+    "f2p_story_clear_days": 70,
+    "light_spender_level_20_days": 7,
+    "whale_level_20_days": 3,
+    "session_length_minutes": 5.5,
+    "daily_sessions_target": 4
+  }
+}

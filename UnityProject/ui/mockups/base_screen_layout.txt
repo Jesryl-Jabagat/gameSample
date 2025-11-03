@@ -1,0 +1,338 @@
+===================================================================
+BASE SCREEN LAYOUT (SANCTUARY) - Eclipse Reborn
+===================================================================
+
+The Sanctuary is the player's home base where they upgrade buildings,
+manage heroes, and collect offline production rewards.
+
+-------------------------------------------------------------------
+LAYOUT OVERVIEW (ASCII MOCKUP)
+-------------------------------------------------------------------
+
+┌──────────────────────────────────────────────────────────────┐
+│ SANCTUARY            💰12,500  💎340  ⚙️        [BATTLE] [X] │ TOP BAR
+├──────────────────────────────────────────────────────────────┤
+│                                                                │
+│  ┌────────┐     ┌────────┐     ┌────────┐                    │
+│  │BARRACKS│     │WORKSHOP│     │ REACTOR│                    │
+│  │ Lv.5 ⬆ │     │ Lv.4   │     │ Lv.3 🔨│                    │
+│  │        │     │⏱ 45:20 │     │        │                    │
+│  └────────┘     └────────┘     └────────┘                    │
+│                                                                │
+│         ┌────────┐     ┌────────┐                             │
+│         │TREASURY│     │TRAINING│                             │
+│         │ Lv.6   │     │ Lv.2   │                             │
+│         │📦 READY│     │        │                             │
+│         └────────┘     └────────┘                             │
+│                                                                │
+│  [Tap building to view details]                               │
+├──────────────────────────────────────────────────────────────┤
+│ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌─────┐ │ NAV BAR
+│ │  BATTLE  │ │SANCTUARY │ │ HEROES   │ │  SHOP    │ │QUEST│ │
+│ └──────────┘ └──────────┘ └──────────┘ └──────────┘ └─────┘ │
+└──────────────────────────────────────────────────────────────┘
+
+-------------------------------------------------------------------
+BUILDING GRID LAYOUT
+-------------------------------------------------------------------
+
+VIEWPORT:
+- Size: Full screen width, 70% height
+- Background: Hand-painted Sanctuary scene (parallax layers)
+- Camera: Isometric or top-down 2.5D view
+- Interaction: Tap building to open upgrade panel
+
+BUILDING CARDS (on grid):
+- Size: 200x200 px (visual building sprite)
+- Touch area: 240x240 px (easier tapping)
+- Spacing: 40px between buildings
+
+BUILDING STATES:
+
+1. IDLE (Ready to upgrade)
+   - Building sprite at full color
+   - Level badge: Top-left corner, 50x50 px circle
+   - Text: "Lv.5" (white, 16pt, bold)
+   - Upgrade arrow: Top-right corner (🔺 icon, 32x32 px)
+   - Tap: Opens upgrade panel
+
+2. UPGRADING (Timer active)
+   - Building sprite with construction overlay (scaffolding)
+   - Progress bar: Below building, 180x20 px
+   - Fill color: Green (#00FF00)
+   - Text: "⏱ 45:20" (white, 18pt, above bar)
+   - Tap: Opens upgrade panel with instant-finish option
+
+3. PRODUCING (Idle production ready)
+   - Building sprite with glow effect
+   - Production icon: Floating above building (📦 32x32 px)
+   - Animation: Gentle bounce loop (0.5s)
+   - Tap: Collects production, plays "claim" SFX
+
+BUILDING POSITIONS (Example grid):
+
+Row 1 (Top):
+- Barracks (Left)
+- Workshop (Center)
+- Shard Reactor (Right)
+
+Row 2 (Middle):
+- Treasury (Left-Center)
+- Training Grounds (Right-Center)
+
+Row 3 (Bottom):
+- Future expansion slots (grayed out, locked)
+
+-------------------------------------------------------------------
+UPGRADE PANEL (POPUP)
+-------------------------------------------------------------------
+
+Triggered by: Tapping any building
+Size: 900x700 px (center screen, 80% dim overlay)
+Background: Stone panel with gold trim
+
+┌─────────────────────────────────────────────────────────────┐
+│                       BARRACKS - LEVEL 5                     │ HEADER
+├─────────────────────────────────────────────────────────────┤
+│ ┌─────────────┐                                              │
+│ │             │  Current Level: 5                            │
+│ │  BARRACKS   │  Next Level: 6                               │
+│ │   SPRITE    │                                              │
+│ │             │  Benefits:                                   │
+│ │             │  • Unlock new hero slots                     │
+│ └─────────────┘  • +5% hero base stats                       │
+│                  • Faster hero XP gain                       │
+│                                                               │
+│ ─────────────────────────────────────────────────────────────│
+│ UPGRADE COST:                                                │
+│  💰 3,000 Gold                                               │
+│  ⏱ 1 hour 23 minutes                                        │
+│                                                               │
+│ ┌──────────────────────────────┐  ┌─────────────────────┐   │
+│ │  UPGRADE (💰 3,000)          │  │ INSTANT (💎 150)    │   │
+│ └──────────────────────────────┘  └─────────────────────┘   │
+│                                                               │
+│                    [CLOSE]                                    │
+└─────────────────────────────────────────────────────────────┘
+
+ELEMENTS:
+
+1. HEADER
+   - Text: "{Building Name} - LEVEL {X}" (32pt, bold, gold)
+   - Close button: Top-right X (48x48 px)
+
+2. BUILDING PREVIEW
+   - Size: 250x250 px
+   - Shows: Animated building sprite (Level 6 preview)
+   - Border: 4px gold
+
+3. INFO SECTION
+   - Current Level: Text + icon (white, 20pt)
+   - Next Level: Text + icon (green, 20pt)
+   - Benefits: Bulleted list (white, 18pt)
+     - Each benefit has icon + text
+     - Highlights new unlocks in gold
+
+4. COST SECTION
+   - Gold cost: Icon + number (yellow, 24pt, bold)
+   - Time cost: Icon + duration (cyan, 24pt)
+   - Check: Red text if insufficient gold
+
+5. ACTION BUTTONS
+   - UPGRADE Button:
+     - Size: 400x80 px
+     - Background: Green if affordable, gray if not
+     - Text: "UPGRADE (💰 3,000)" (white, 24pt, bold)
+     - Tap: Deducts gold, starts timer, closes panel
+   
+   - INSTANT Button:
+     - Size: 250x80 px
+     - Background: Blue (premium)
+     - Text: "INSTANT (💎 150)" (white, 20pt)
+     - Tap: Deducts shards, completes instantly, closes panel
+
+6. CLOSE BUTTON
+   - Size: 200x60 px
+   - Background: Dark gray
+   - Text: "CLOSE" (white, 20pt)
+   - Tap: Closes panel
+
+-------------------------------------------------------------------
+PRODUCTION PANEL (POPUP)
+-------------------------------------------------------------------
+
+Triggered by: Tapping building with production ready (📦 icon)
+Size: 700x500 px (center screen)
+Background: Blue panel with glow
+
+┌─────────────────────────────────────────────────────────────┐
+│                  PRODUCTION READY!                           │
+├─────────────────────────────────────────────────────────────┤
+│                                                               │
+│               ┌──────────────────────┐                       │
+│               │   💰 +1,200 Gold     │                       │
+│               │   🔧 +5 Materials    │                       │
+│               └──────────────────────┘                       │
+│                                                               │
+│  Your {Building Name} has been working while you were away!  │
+│                                                               │
+│  ┌──────────────────┐       ┌──────────────────────┐        │
+│  │  CLAIM           │       │ WATCH AD FOR +50%    │        │
+│  │  (💰 1,200)      │       │ (💰 1,800 total)     │        │
+│  └──────────────────┘       └──────────────────────┘        │
+│                                                               │
+│  Ad boost: +50% production speed for 1 hour                  │
+│  (Ads remaining today: 2/3)                                  │
+└─────────────────────────────────────────────────────────────┘
+
+ELEMENTS:
+
+1. HEADER
+   - Text: "PRODUCTION READY!" (36pt, bold, animated pulse)
+   - Icon: Chest opening animation (128x128 px)
+
+2. REWARDS DISPLAY
+   - Background: Light blue (#6699FF40)
+   - Icons: Gold, materials, shards (64x64 px each)
+   - Text: "+1,200 Gold" (yellow, 28pt, bold)
+   - Layout: Vertical stack, centered
+
+3. FLAVOR TEXT
+   - Text: Explains production was running offline (16pt, white)
+
+4. ACTION BUTTONS
+   - CLAIM Button:
+     - Size: 300x80 px
+     - Background: Green
+     - Text: "CLAIM" + reward summary (white, 24pt)
+     - Tap: Grants rewards, closes panel, plays SFX
+   
+   - WATCH AD Button:
+     - Size: 300x80 px
+     - Background: Purple (ad indicator color)
+     - Text: "WATCH AD FOR +50%" + boosted total (white, 20pt)
+     - Tap: Shows rewarded ad, grants 1.5x rewards, closes panel
+     - Disabled if: Daily ad limit reached (gray + "Limit Reached")
+
+5. AD INFO
+   - Text: Explains ad boost benefit (14pt, gray)
+   - Text: Shows remaining ads today (14pt, white)
+
+-------------------------------------------------------------------
+OFFLINE REWARDS POPUP (ON LOGIN)
+-------------------------------------------------------------------
+
+Triggered by: Logging in after 1+ hour offline
+Size: 800x600 px (center screen, 70% dim overlay)
+Background: Gold panel with rays of light
+
+┌─────────────────────────────────────────────────────────────┐
+│                    WELCOME BACK!                             │
+│                                                               │
+│        You were offline for 3 hours 45 minutes               │
+│                                                               │
+│          Your Sanctuary produced resources:                  │
+│                                                               │
+│               ┌──────────────────────┐                       │
+│               │ 💰 +2,400 Gold       │                       │
+│               │ 💎 +3 Solar Shards   │                       │
+│               │ 🔧 +15 Materials     │                       │
+│               └──────────────────────┘                       │
+│                                                               │
+│  ┌──────────────────┐       ┌──────────────────────┐        │
+│  │  CLAIM           │       │ WATCH AD TO DOUBLE   │        │
+│  │  (Normal)        │       │ (2x Rewards!)        │        │
+│  └──────────────────┘       └──────────────────────┘        │
+│                                                               │
+│  Offline cap: 12 hours (VIP: 24 hours)                       │
+└─────────────────────────────────────────────────────────────┘
+
+Similar to production panel, but shows accumulated offline rewards
+from ALL buildings combined.
+
+-------------------------------------------------------------------
+BOTTOM NAVIGATION BAR
+-------------------------------------------------------------------
+
+Position: Fixed bottom, full width, 100px height
+Background: Dark wood texture (#3A2817)
+Buttons: 5 main sections
+
+┌──────────┬──────────┬──────────┬──────────┬──────────┐
+│  BATTLE  │SANCTUARY │  HEROES  │   SHOP   │  QUESTS  │
+│    ⚔️    │    🏰    │    👥    │    🛒    │    📜    │
+│          │  (ACTIVE)│          │   [●]    │          │
+└──────────┴──────────┴──────────┴──────────┴──────────┘
+
+Each button:
+- Size: 1/5 screen width, 100px height
+- Icon: 48x48 px, centered above text
+- Text: Button name (white, 16pt)
+- Active state: Yellow underline, +10% scale
+- Notification badge: Red dot if new content (shop offers, quests)
+
+BUTTON FUNCTIONS:
+1. BATTLE: Navigate to stage select / combat screen
+2. SANCTUARY: Current screen (highlighted)
+3. HEROES: Navigate to hero management screen
+4. SHOP: Navigate to shop (top-up, bundles, battle pass)
+5. QUESTS: Navigate to daily quests / events screen
+
+-------------------------------------------------------------------
+VISUAL POLISH & EFFECTS
+-------------------------------------------------------------------
+
+PARALLAX BACKGROUND:
+- Layer 1 (Far): Sky with clouds (slow scroll, 0.2x speed)
+- Layer 2 (Mid): Distant mountains (0.5x speed)
+- Layer 3 (Near): Sanctuary structures (1.0x speed, interactive)
+
+BUILDING ANIMATIONS:
+- Idle: Gentle sway (0.5° rotation, 2s loop)
+- Producing: Smoke/steam particles from chimneys
+- Upgrading: Hammer particles, construction dust
+- Level up: Flash of light, confetti burst
+
+PARTICLE EFFECTS:
+- Coin collection: Gold particles fly from building to currency counter
+- Shard production: Blue sparkles emanate from Reactor
+- Upgrade complete: Green checkmark VFX, success jingle
+
+AMBIENT AUDIO:
+- Background music: Calm, acoustic (sanctuary theme, 3min loop)
+- Building taps: Soft wood knock SFX
+- Upgrade start: Hammer SFX
+- Production claim: Coin jingle SFX
+
+-------------------------------------------------------------------
+RESPONSIVE DESIGN
+-------------------------------------------------------------------
+
+PORTRAIT MODE (1080x1920):
+- Building grid: 2 columns instead of 3
+- Scroll vertically to see all buildings
+- Navigation bar stays at bottom (fixed)
+
+LANDSCAPE MODE (1920x1080):
+- Building grid: 3 columns as shown
+- All buildings visible without scrolling
+- More horizontal space for panels
+
+TABLET (iPad):
+- Scale UI 1.3x for larger touch targets
+- Show more of the background art
+- Larger building sprites (300x300 px)
+
+-------------------------------------------------------------------
+ACCESSIBILITY & QOL
+-------------------------------------------------------------------
+
+1. Tutorial markers: First-time user sees arrows pointing at buildings
+2. Building tooltips: Long-press shows quick info without opening panel
+3. Bulk claim: "Collect All" button if multiple buildings ready
+4. Sorting: Buildings ordered by upgrade completion time
+5. Notifications: Badge on SANCTUARY nav button if production ready
+
+===================================================================
+END OF BASE SCREEN LAYOUT DOCUMENTATION
+===================================================================

@@ -1,0 +1,368 @@
+{
+  "hero_templates": [
+    {
+      "hero_id": "hero_001_auron",
+      "name": "Auron",
+      "title": "Solaris Vanguard",
+      "role": "balanced_dps",
+      "weapon_type": "greatsword",
+      "unlock_condition": "tutorial_complete",
+      "lore": "First Lightbringer, awakened from 1000-year stasis. Seeks redemption for failing to prevent the Eclipse.",
+      
+      "base_stats_level_1": {
+        "hp": 500,
+        "atk": 45,
+        "def": 20,
+        "spd": 100,
+        "crit": 0.05
+      },
+      
+      "stat_growth_per_level": {
+        "hp": 25,
+        "atk": 3.2,
+        "def": 1.5,
+        "spd": 0.5,
+        "crit": 0.0015
+      },
+      
+      "skills": [
+        {
+          "skill_id": "auron_skill_1",
+          "name": "Solar Cleave",
+          "type": "active",
+          "cooldown_seconds": 3.0,
+          "cast_time_seconds": 0.4,
+          "damage_multiplier": 1.8,
+          "aoe_range_meters": 3.0,
+          "aoe_angle_degrees": 180,
+          "description": "Swing greatsword in 180° arc, dealing 180% ATK damage to all enemies hit.",
+          "animation_frames": 10,
+          "hit_frame": 6,
+          "vfx": "solar_slash_arc"
+        },
+        {
+          "skill_id": "auron_skill_2",
+          "name": "Eclipse Breaker",
+          "type": "ultimate",
+          "cooldown_seconds": 15.0,
+          "cast_time_seconds": 0.8,
+          "damage_multiplier": 3.5,
+          "aoe_range_meters": 4.0,
+          "aoe_type": "circle",
+          "status_effect": {
+            "type": "stun",
+            "duration": 1.5
+          },
+          "description": "Leap and slam ground, dealing 350% ATK AoE damage and stunning enemies for 1.5s.",
+          "animation_frames": 16,
+          "hit_frame": 12,
+          "vfx": "eclipse_slam_shockwave"
+        }
+      ],
+      
+      "animations": {
+        "idle": { "frames": 4, "loop_time": 0.5 },
+        "walk": { "frames": 6, "loop_time": 0.6 },
+        "run": { "frames": 8, "loop_time": 0.5 },
+        "basic_attack": { "frames": 8, "duration": 0.4, "hit_frame": 4 },
+        "skill_1": { "frames": 10, "duration": 0.6, "hit_frame": 6 },
+        "skill_2": { "frames": 16, "duration": 1.0, "hit_frame": 12 },
+        "hit": { "frames": 3, "duration": 0.2 },
+        "death": { "frames": 8, "duration": 0.8 }
+      }
+    },
+    
+    {
+      "hero_id": "hero_002_lyra",
+      "name": "Lyra",
+      "title": "Lightweaver",
+      "role": "healer_support",
+      "weapon_type": "staff",
+      "unlock_condition": "barracks_level_3",
+      "lore": "Priestess of the Twilight Circle who defected to help Sanctuary. Believes in redemption through light.",
+      
+      "base_stats_level_1": {
+        "hp": 380,
+        "atk": 30,
+        "def": 15,
+        "spd": 95,
+        "crit": 0.03
+      },
+      
+      "stat_growth_per_level": {
+        "hp": 18,
+        "atk": 2.5,
+        "def": 1.2,
+        "spd": 0.4,
+        "crit": 0.001
+      },
+      
+      "skills": [
+        {
+          "skill_id": "lyra_skill_1",
+          "name": "Healing Radiance",
+          "type": "active",
+          "cooldown_seconds": 5.0,
+          "cast_time_seconds": 0.5,
+          "heal_multiplier": 1.2,
+          "target": "nearest_ally",
+          "buff": {
+            "type": "defense_buff",
+            "percentage": 0.10,
+            "duration": 5.0
+          },
+          "description": "Heal nearest ally for 120% ATK and grant +10% DEF for 5s.",
+          "animation_frames": 8,
+          "effect_frame": 5,
+          "vfx": "light_beam_heal"
+        },
+        {
+          "skill_id": "lyra_skill_2",
+          "name": "Sanctuary Blessing",
+          "type": "ultimate",
+          "cooldown_seconds": 20.0,
+          "cast_time_seconds": 1.0,
+          "heal_multiplier": 0.8,
+          "aoe_range_meters": 999,
+          "target": "all_allies",
+          "cleanse_debuffs": true,
+          "description": "AoE heal all allies for 80% ATK and cleanse all debuffs.",
+          "animation_frames": 14,
+          "effect_frame": 10,
+          "vfx": "radiant_nova"
+        }
+      ],
+      
+      "animations": {
+        "idle": { "frames": 4, "loop_time": 0.6 },
+        "walk": { "frames": 6, "loop_time": 0.7 },
+        "run": { "frames": 8, "loop_time": 0.6 },
+        "basic_attack": { "frames": 6, "duration": 0.5, "hit_frame": 3 },
+        "skill_1": { "frames": 8, "duration": 0.7, "hit_frame": 5 },
+        "skill_2": { "frames": 14, "duration": 1.2, "hit_frame": 10 },
+        "hit": { "frames": 3, "duration": 0.2 },
+        "death": { "frames": 8, "duration": 0.8 }
+      }
+    },
+    
+    {
+      "hero_id": "hero_003_ronan",
+      "name": "Ronan",
+      "title": "Ironclad Sentinel",
+      "role": "tank_defender",
+      "weapon_type": "shield_mace",
+      "unlock_condition": "barracks_level_5",
+      "lore": "Former Iron Covenant captain. Lost his squad to Umbra, now fights to protect what remains.",
+      
+      "base_stats_level_1": {
+        "hp": 700,
+        "atk": 35,
+        "def": 35,
+        "spd": 85,
+        "crit": 0.02
+      },
+      
+      "stat_growth_per_level": {
+        "hp": 35,
+        "atk": 2.0,
+        "def": 2.5,
+        "spd": 0.3,
+        "crit": 0.0008
+      },
+      
+      "skills": [
+        {
+          "skill_id": "ronan_skill_1",
+          "name": "Shield Bash",
+          "type": "active",
+          "cooldown_seconds": 4.0,
+          "cast_time_seconds": 0.3,
+          "damage_multiplier": 1.2,
+          "charge_distance_meters": 3.0,
+          "status_effect": {
+            "type": "stun",
+            "duration": 1.0
+          },
+          "description": "Charge forward 3m, dealing 120% ATK damage and stunning for 1s.",
+          "animation_frames": 8,
+          "hit_frame": 5,
+          "vfx": "shield_charge_impact"
+        },
+        {
+          "skill_id": "ronan_skill_2",
+          "name": "Unbreakable Bulwark",
+          "type": "ultimate",
+          "cooldown_seconds": 18.0,
+          "cast_time_seconds": 0.5,
+          "taunt_all_enemies": true,
+          "self_buff": {
+            "def_increase_percentage": 0.50,
+            "damage_reflection_percentage": 0.20,
+            "duration": 6.0
+          },
+          "description": "Taunt all enemies, gain +50% DEF and reflect 20% damage for 6s.",
+          "animation_frames": 10,
+          "effect_frame": 4,
+          "vfx": "iron_fortress_aura"
+        }
+      ],
+      
+      "animations": {
+        "idle": { "frames": 4, "loop_time": 0.5 },
+        "walk": { "frames": 6, "loop_time": 0.8 },
+        "run": { "frames": 8, "loop_time": 0.7 },
+        "basic_attack": { "frames": 6, "duration": 0.5, "hit_frame": 3 },
+        "skill_1": { "frames": 8, "duration": 0.6, "hit_frame": 5 },
+        "skill_2": { "frames": 10, "duration": 0.8, "hit_frame": 4 },
+        "block": { "frames": 2, "duration": 0.3 },
+        "hit": { "frames": 3, "duration": 0.2 },
+        "death": { "frames": 8, "duration": 0.8 }
+      }
+    },
+    
+    {
+      "hero_id": "hero_004_cira",
+      "name": "Cira",
+      "title": "Stormcaller",
+      "role": "burst_mage_aoe",
+      "weapon_type": "elemental_orbs",
+      "unlock_condition": "chapter_12_complete",
+      "lore": "Prodigy from Twilight Circle. Studies Umbra to turn their power against them. Volatile and ambitious.",
+      
+      "base_stats_level_1": {
+        "hp": 350,
+        "atk": 55,
+        "def": 12,
+        "spd": 90,
+        "crit": 0.08
+      },
+      
+      "stat_growth_per_level": {
+        "hp": 15,
+        "atk": 4.0,
+        "def": 0.8,
+        "spd": 0.4,
+        "crit": 0.002
+      },
+      
+      "skills": [
+        {
+          "skill_id": "cira_skill_1",
+          "name": "Arcane Missiles",
+          "type": "active",
+          "cooldown_seconds": 3.5,
+          "cast_time_seconds": 0.6,
+          "projectile_count": 5,
+          "damage_multiplier_per_projectile": 0.6,
+          "homing": true,
+          "description": "Fire 5 homing projectiles, each dealing 60% ATK damage.",
+          "animation_frames": 10,
+          "projectile_spawn_frames": [3, 4, 5, 6, 7],
+          "vfx": "arcane_missile_barrage"
+        },
+        {
+          "skill_id": "cira_skill_2",
+          "name": "Meteor Storm",
+          "type": "ultimate",
+          "cooldown_seconds": 16.0,
+          "cast_time_seconds": 1.2,
+          "meteor_count": 8,
+          "total_damage_multiplier": 2.0,
+          "aoe_range_meters": 5.0,
+          "status_effect": {
+            "type": "burn",
+            "damage_per_tick": 0.02,
+            "duration": 4.0
+          },
+          "description": "Call 8 meteors dealing 200% ATK total damage and burning enemies for 2% HP/s for 4s.",
+          "animation_frames": 18,
+          "meteor_spawn_start_frame": 8,
+          "vfx": "meteor_rain"
+        }
+      ],
+      
+      "animations": {
+        "idle": { "frames": 4, "loop_time": 0.5 },
+        "walk": { "frames": 6, "loop_time": 0.6 },
+        "run": { "frames": 8, "loop_time": 0.5 },
+        "basic_attack": { "frames": 6, "duration": 0.4, "hit_frame": 3 },
+        "skill_1": { "frames": 10, "duration": 0.8, "hit_frame": 5 },
+        "skill_2": { "frames": 18, "duration": 1.5, "hit_frame": 10 },
+        "hit": { "frames": 3, "duration": 0.2 },
+        "death": { "frames": 8, "duration": 0.8 }
+      }
+    },
+    
+    {
+      "hero_id": "hero_005_milo",
+      "name": "Milo",
+      "title": "Shadowstep",
+      "role": "rogue_single_target_dps",
+      "weapon_type": "dual_daggers",
+      "unlock_condition": "chapter_20_complete",
+      "lore": "Ex-thief from underground. Knows Umbra-corrupted zones better than anyone. Cynical but loyal.",
+      
+      "base_stats_level_1": {
+        "hp": 420,
+        "atk": 50,
+        "def": 18,
+        "spd": 120,
+        "crit": 0.12
+      },
+      
+      "stat_growth_per_level": {
+        "hp": 20,
+        "atk": 3.5,
+        "def": 1.0,
+        "spd": 0.8,
+        "crit": 0.0025
+      },
+      
+      "skills": [
+        {
+          "skill_id": "milo_skill_1",
+          "name": "Shadowstep",
+          "type": "active",
+          "cooldown_seconds": 2.5,
+          "cast_time_seconds": 0.2,
+          "teleport_behind_target": true,
+          "next_attack_bonus": {
+            "crit_chance_increase": 1.0,
+            "damage_multiplier": 1.0
+          },
+          "description": "Dash behind target; next attack has 100% crit chance.",
+          "animation_frames": 6,
+          "teleport_frame": 2,
+          "vfx": "shadow_dash"
+        },
+        {
+          "skill_id": "milo_skill_2",
+          "name": "Blade Dance",
+          "type": "ultimate",
+          "cooldown_seconds": 14.0,
+          "cast_time_seconds": 0.5,
+          "strike_count": 8,
+          "damage_multiplier_per_strike": 1.5,
+          "def_ignore_percentage": 0.50,
+          "target": "single_target",
+          "description": "8 rapid strikes to single target, each dealing 150% ATK and ignoring 50% DEF.",
+          "animation_frames": 20,
+          "strike_frames": [4, 6, 8, 10, 12, 14, 16, 18],
+          "vfx": "blade_flurry"
+        }
+      ],
+      
+      "animations": {
+        "idle": { "frames": 4, "loop_time": 0.4 },
+        "walk": { "frames": 6, "loop_time": 0.5 },
+        "run": { "frames": 8, "loop_time": 0.4 },
+        "basic_attack": { "frames": 6, "duration": 0.3, "hit_frame": 3 },
+        "skill_1": { "frames": 6, "duration": 0.4, "hit_frame": 4 },
+        "skill_2": { "frames": 20, "duration": 1.2, "hit_frame": 4 },
+        "dodge": { "frames": 4, "duration": 0.3 },
+        "hit": { "frames": 3, "duration": 0.2 },
+        "death": { "frames": 8, "duration": 0.8 }
+      }
+    }
+  ]
+}

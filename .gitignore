@@ -1,0 +1,53 @@
+# Unity Generated Files
+Library/
+Temp/
+Obj/
+Build/
+Builds/
+Logs/
+UserSettings/
+MemoryCaptures/
+
+# Visual Studio / Rider Cache
+.vs/
+.idea/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# Unity Cache
+.gradle/
+ExportedObj/
+.consulo/
+
+# OS Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+[Dd]esktop.ini
+
+# Asset Store Tools
+AssetStoreTools/
+
+# Crash Reports
+sysinfo.txt
+crashlytics-build.properties
+
+# Temporary Files
+~$*
+

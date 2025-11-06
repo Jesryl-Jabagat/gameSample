@@ -194,7 +194,15 @@ public class PlayerController : MonoBehaviour
 
         animator.SetTrigger(AnimAttack);
 
-        yield return new WaitForSeconds(attackCooldown);
+        // Trigger hit even without animation events (editor/testing convenience)
+        yield return new WaitForSeconds(Mathf.Max(0.1f, attackCooldown * 0.4f));
+        OnAttackHit();
+
+        float remaining = Mathf.Max(0f, attackCooldown - Mathf.Max(0.1f, attackCooldown * 0.4f));
+        if (remaining > 0f)
+        {
+            yield return new WaitForSeconds(remaining);
+        }
 
         isAttacking = false;
         canAttack = true;

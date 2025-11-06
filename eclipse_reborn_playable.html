@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eclipse Reborn - Enhanced Playable Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        #gameCanvas {
+            display: block;
+            margin: 0 auto;
+            background: url('UnityProject/Assets/Sprites/Environment/Combat_forest_background_e6c04d00.png') center/cover;
+            border: 2px solid #ffd700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .game-ui {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            pointer-events: none;
+        }
+
+        .health-bar {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 250px;
+            height: 25px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #ffd700;
+            border-radius: 12px;
+            pointer-events: auto;
+        }
+
+        .health-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff4444, #ff8888);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .health-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 14px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+
+        .enemy-health-bar {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 250px;
+            height: 25px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #8844ff;
+            border-radius: 12px;
+        }
+
+        .enemy-health-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8844ff, #bb88ff);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            pointer-events: auto;
+        }
+
+        .control-btn {
+            padding: 15px 20px;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #1a1a1a;
+            border: none;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(255, 215, 0, 0.3);
+            min-width: 120px;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .control-btn:active {
+            transform: translateY(0);
+        }
+
+        .skill-btn {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+            color: white;
+        }
+
+        .defend-btn {
+            background: linear-gradient(135deg, #4caf50, #66bb6a);
+            color: white;
+        }
+
+        .hero-info {
+            position: absolute;
+            top: 55px;
+            left: 20px;
+            color: #ffd700;
+            font-size: 16px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            pointer-events: auto;
+        }
+
+        .enemy-info {
+            position: absolute;
+            top: 55px;
+            right: 20px;
+            color: #ff6b6b;
+            font-size: 16px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .battle-log {
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #ffd700;
+            border-radius: 8px;
+            padding: 10px;
+            color: #fff;
+            font-size: 14px;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            border: 3px solid #ffd700;
+            display: none;
+            pointer-events: auto;
+            min-width: 300px;
+        }
+
+        .victory {
+            color: #4caf50;
+        }
+
+        .defeat {
+            color: #f44336;
+        }
+
+        .restart-btn {
+            margin-top: 20px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #4caf50, #66bb6a);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .character-sprite {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            image-rendering: pixelated;
+            transition: all 0.3s ease;
+        }
+
+        .player-sprite {
+            bottom: 180px;
+            left: 150px;
+        }
+
+        .enemy-sprite {
+            bottom: 180px;
+            right: 150px;
+        }
+
+        .damage-number {
+            position: absolute;
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff4444;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            animation: damageFloat 1s ease-out forwards;
+        }
+
+        @keyframes damageFloat {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-50px); }
+        }
+
+        .instructions {
+            position: absolute;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            color: #ccc;
+            font-size: 12px;
+            max-width: 600px;
+        }
+
+        .turn-indicator {
+            position: absolute;
+            top: 180px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 215, 0, 0.9);
+            color: #1a1a1a;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    
+    <div class="game-ui">
+        <div class="health-bar">
+            <div class="health-fill" id="playerHealthFill"></div>
+            <div class="health-text" id="playerHealthText">150/150</div>
+        </div>
+        
+        <div class="hero-info" id="heroInfo">Auron - Solaris Vanguard</div>
+        
+        <div class="enemy-health-bar">
+            <div class="enemy-health-fill" id="enemyHealthFill"></div>
+            <div class="health-text" id="enemyHealthText">100/100</div>
+        </div>
+        
+        <div class="enemy-info" id="enemyInfo">Shade Enemy</div>
+        
+        <div class="battle-log" id="battleLog">
+            Choose your action to begin battle!
+        </div>
+        
+        <div class="turn-indicator" id="turnIndicator">Your Turn</div>
+        
+        <img src="UnityProject/Assets/Sprites/Characters/Auron_hero_character_sprite_8cfb17d1.png" 
+             class="character-sprite player-sprite" id="playerSprite" alt="Auron">
+        
+        <img src="UnityProject/Assets/Sprites/Enemies/Basic_shade_enemy_sprite_a04ae306.png" 
+             class="character-sprite enemy-sprite" id="enemySprite" alt="Shade">
+        
+        <div class="controls">
+            <button class="control-btn" id="attackBtn">⚔️ Attack</button>
+            <button class="control-btn skill-btn" id="skillBtn">✨ Solar Cleave</button>
+            <button class="control-btn defend-btn" id="defendBtn">🛡️ Defend</button>
+        </div>
+        
+        <div class="instructions">
+            <p><strong>Eclipse Reborn: Chronicles of the Lost Sun</strong><br>
+            Attack: Deal basic damage | Solar Cleave: Powerful skill with cooldown | Defend: Reduce incoming damage by 50%</p>
+        </div>
+        
+        <div class="game-over" id="gameOverScreen">
+            <h2 id="gameOverTitle">Victory!</h2>
+            <p id="gameOverText">You have defeated the enemy!</p>
+            <button class="restart-btn" onclick="restartGame()">Play Again</button>
+        </div>
+    </div>
+
+    <script>
+        // Game state
+        let gameState = {
+            player: {
+                name: "Auron",
+                title: "Solaris Vanguard",
+                maxHp: 150,
+                hp: 150,
+                attack: 30,
+                defense: 12,
+                skills: {
+                    solarCleave: {
+                        name: "Solar Cleave",
+                        damage: 55,
+                        cooldown: 3,
+                        currentCooldown: 0
+                    }
+                },
+                isDefending: false
+            },
+            enemy: {
+                name: "Shade",
+                maxHp: 120,
+                hp: 120,
+                attack: 25,
+                defense: 8,
+                aiType: "aggressive"
+            },
+            turn: "player",
+            gameOver: false,
+            battleLog: [],
+            turnCount: 1
+        };
+
+        // Animation states
+        let animations = {
+            playerDamage: null,
+            enemyDamage: null
+        };
+
+        // Initialize game
+        function initGame() {
+            updateUI();
+            updateBattleLog("Battle begins! Choose your action.");
+        }
+
+        // Player actions
+        function playerAttack() {
+            if (gameState.turn !== "player" || gameState.gameOver) return;
+            
+            const damage = Math.max(1, gameState.player.attack - gameState.enemy.defense + Math.floor(Math.random() * 10) - 5);
+            gameState.enemy.hp = Math.max(0, gameState.enemy.hp - damage);
+            
+            showDamage(damage, false);
+            animateSprite('enemy', 'hit');
+            
+            updateBattleLog(`Auron attacks for ${damage} damage!`);
+            
+            setTimeout(() => {
+                checkGameEnd();
+                if (!gameState.gameOver) {
+                    gameState.turn = "enemy";
+                    setTimeout(enemyTurn, 1500);
+                }
+                updateUI();
+            }, 800);
+        }
+
+        function playerSkill() {
+            if (gameState.turn !== "player" || gameState.gameOver) return;
+            if (gameState.player.skills.solarCleave.currentCooldown > 0) return;
+            
+            const damage = gameState.player.skills.solarCleave.damage + Math.floor(Math.random() * 15) - 5;
+            gameState.enemy.hp = Math.max(0, gameState.enemy.hp - damage);
+            gameState.player.skills.solarCleave.currentCooldown = gameState.player.skills.solarCleave.cooldown;
+            
+            showDamage(damage, false);
+            animateSprite('enemy', 'hit');
+            animateSprite('player', 'skill');
+            
+            updateBattleLog(`Auron unleashes Solar Cleave for ${damage} damage!`);
+            
+            setTimeout(() => {
+                checkGameEnd();
+                if (!gameState.gameOver) {
+                    gameState.turn = "enemy";
+                    setTimeout(enemyTurn, 1500);
+                }
+                updateUI();
+            }, 800);
+        }
+
+        function playerDefend() {
+            if (gameState.turn !== "player" || gameState.gameOver) return;
+            
+            gameState.player.isDefending = true;
+            animateSprite('player', 'defend');
+            
+            updateBattleLog("Auron takes a defensive stance!");
+            
+            setTimeout(() => {
+                gameState.turn = "enemy";
+                setTimeout(enemyTurn, 1500);
+                updateUI();
+            }, 800);
+        }
+
+        // Enemy AI
+        function enemyTurn() {
+            if (gameState.gameOver) return;
+            
+            updateBattleLog("Shade prepares to attack...");
+            
+            setTimeout(() => {
+                let damage = Math.max(1, gameState.enemy.attack - gameState.player.defense + Math.floor(Math.random() * 8) - 4);
+                
+                if (gameState.player.isDefending) {
+                    damage = Math.floor(damage * 0.5);
+                    gameState.player.isDefending = false;
+                    updateBattleLog(`Shade attacks but Auron's defense reduces damage to ${damage}!`);
+                } else {
+                    updateBattleLog(`Shade attacks for ${damage} damage!`);
+                }
+                
+                gameState.player.hp = Math.max(0, gameState.player.hp - damage);
+                
+                showDamage(damage, true);
+                animateSprite('player', 'hit');
+                animateSprite('enemy', 'attack');
+                
+                setTimeout(() => {
+                    checkGameEnd();
+                    if (!gameState.gameOver) {
+                        gameState.turn = "player";
+                        gameState.turnCount++;
+                        
+                        // Reduce skill cooldowns
+                        if (gameState.player.skills.solarCleave.currentCooldown > 0) {
+                            gameState.player.skills.solarCleave.currentCooldown--;
+                        }
+                    }
+                    updateUI();
+                }, 800);
+            }, 1000);
+        }
+
+        // Animation functions
+        function animateSprite(target, action) {
+            const sprite = document.getElementById(target === 'player' ? 'playerSprite' : 'enemySprite');
+            
+            switch(action) {
+                case 'hit':
+                    sprite.style.filter = 'brightness(2) hue-rotate(0deg)';
+                    sprite.style.transform = 'translateX(-10px)';
+                    setTimeout(() => {
+                        sprite.style.filter = 'none';
+                        sprite.style.transform = 'translateX(0)';
+                    }, 200);
+                    break;
+                case 'attack':
+                    sprite.style.transform = 'scale(1.1) translateX(20px)';
+                    setTimeout(() => {
+                        sprite.style.transform = 'scale(1) translateX(0)';
+                    }, 300);
+                    break;
+                case 'skill':
+                    sprite.style.filter = 'brightness(1.5) hue-rotate(45deg)';
+                    sprite.style.transform = 'scale(1.2)';
+                    setTimeout(() => {
+                        sprite.style.filter = 'none';
+                        sprite.style.transform = 'scale(1)';
+                    }, 500);
+                    break;
+                case 'defend':
+                    sprite.style.filter = 'brightness(0.7) hue-rotate(120deg)';
+                    setTimeout(() => {
+                        sprite.style.filter = 'none';
+                    }, 800);
+                    break;
+            }
+        }
+
+        function showDamage(damage, isPlayer) {
+            const damageEl = document.createElement('div');
+            damageEl.className = 'damage-number';
+            damageEl.textContent = `-${damage}`;
+            
+            if (isPlayer) {
+                damageEl.style.left = '200px';
+                damageEl.style.bottom = '250px';
+                damageEl.style.color = '#ff4444';
+            } else {
+                damageEl.style.right = '200px';
+                damageEl.style.bottom = '250px';
+                damageEl.style.color = '#ffaa44';
+            }
+            
+            document.body.appendChild(damageEl);
+            
+            setTimeout(() => {
+                document.body.removeChild(damageEl);
+            }, 1000);
+        }
+
+        // Check if game should end
+        function checkGameEnd() {
+            if (gameState.player.hp <= 0) {
+                gameState.gameOver = true;
+                showGameOver(false);
+            } else if (gameState.enemy.hp <= 0) {
+                gameState.gameOver = true;
+                showGameOver(true);
+            }
+        }
+
+        // Show game over screen
+        function showGameOver(victory) {
+            const gameOverScreen = document.getElementById('gameOverScreen');
+            const title = document.getElementById('gameOverTitle');
+            const text = document.getElementById('gameOverText');
+            
+            if (victory) {
+                title.textContent = 'Victory!';
+                title.className = 'victory';
+                text.textContent = `Auron has defeated the Shade in ${gameState.turnCount} turns!`;
+                updateBattleLog("Victory! The Shade has been vanquished!");
+            } else {
+                title.textContent = 'Defeat!';
+                title.className = 'defeat';
+                text.textContent = 'The Shade has overwhelmed Auron...';
+                updateBattleLog("Defeat... Auron has fallen to the Shade.");
+            }
+            
+            gameOverScreen.style.display = 'block';
+        }
+
+        // Update battle log
+        function updateBattleLog(message) {
+            const battleLog = document.getElementById('battleLog');
+            battleLog.textContent = message;
+            gameState.battleLog.push(message);
+        }
+
+        // Update UI elements
+        function updateUI() {
+            // Update player health
+            const playerHealthPercent = (gameState.player.hp / gameState.player.maxHp) * 100;
+            document.getElementById('playerHealthFill').style.width = playerHealthPercent + '%';
+            document.getElementById('playerHealthText').textContent = `${gameState.player.hp}/${gameState.player.maxHp}`;
+            
+            // Update enemy health
+            const enemyHealthPercent = (gameState.enemy.hp / gameState.enemy.maxHp) * 100;
+            document.getElementById('enemyHealthFill').style.width = enemyHealthPercent + '%';
+            document.getElementById('enemyHealthText').textContent = `${gameState.enemy.hp}/${gameState.enemy.maxHp}`;
+            
+            // Update skill button
+            const skillBtn = document.getElementById('skillBtn');
+            const cooldown = gameState.player.skills.solarCleave.currentCooldown;
+            if (cooldown > 0) {
+                skillBtn.textContent = `✨ Solar Cleave (${cooldown})`;
+                skillBtn.disabled = true;
+                skillBtn.style.opacity = '0.5';
+            } else {
+                skillBtn.textContent = '✨ Solar Cleave';
+                skillBtn.disabled = false;
+                skillBtn.style.opacity = '1';
+            }
+            
+            // Update turn indicator
+            const turnIndicator = document.getElementById('turnIndicator');
+            if (gameState.gameOver) {
+                turnIndicator.style.display = 'none';
+            } else if (gameState.turn === "player") {
+                turnIndicator.textContent = 'Your Turn';
+                turnIndicator.style.background = 'rgba(255, 215, 0, 0.9)';
+                turnIndicator.style.color = '#1a1a1a';
+            } else {
+                turnIndicator.textContent = 'Enemy Turn';
+                turnIndicator.style.background = 'rgba(255, 107, 107, 0.9)';
+                turnIndicator.style.color = 'white';
+            }
+            
+            // Disable buttons during enemy turn
+            const buttons = [document.getElementById('attackBtn'), skillBtn, document.getElementById('defendBtn')];
+            buttons.forEach(btn => {
+                if (gameState.turn !== "player" || gameState.gameOver) {
+                    btn.style.pointerEvents = 'none';
+                    btn.style.opacity = '0.6';
+                } else {
+                    btn.style.pointerEvents = 'auto';
+                    btn.style.opacity = '1';
+                }
+            });
+        }
+
+        // Restart game
+        function restartGame() {
+            gameState = {
+                player: {
+                    name: "Auron",
+                    title: "Solaris Vanguard",
+                    maxHp: 150,
+                    hp: 150,
+                    attack: 30,
+                    defense: 12,
+                    skills: {
+                        solarCleave: {
+                            name: "Solar Cleave",
+                            damage: 55,
+                            cooldown: 3,
+                            currentCooldown: 0
+                        }
+                    },
+                    isDefending: false
+                },
+                enemy: {
+                    name: "Shade",
+                    maxHp: 120,
+                    hp: 120,
+                    attack: 25,
+                    defense: 8,
+                    aiType: "aggressive"
+                },
+                turn: "player",
+                gameOver: false,
+                battleLog: [],
+                turnCount: 1
+            };
+            
+            document.getElementById('gameOverScreen').style.display = 'none';
+            updateUI();
+            updateBattleLog("New battle begins! Choose your action.");
+        }
+
+        // Event listeners
+        document.getElementById('attackBtn').addEventListener('click', playerAttack);
+        document.getElementById('skillBtn').addEventListener('click', playerSkill);
+        document.getElementById('defendBtn').addEventListener('click', playerDefend);
+
+        // Start the game
+        initGame();
+    </script>
+</body>
+</html>

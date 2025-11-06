@@ -1,0 +1,46 @@
+ECLIPSE REBORN - UNITY COMPILATION ERROR FIX GUIDE
+=================================================
+
+✅ STEP 1: ENTER SAFE MODE
+- In Unity dialog, click "Enter Safe Mode"
+- This allows Unity to open without running problematic scripts
+
+✅ STEP 2: CHECK CONSOLE WINDOW
+- In Unity, go to Window > General > Console
+- Look for red error messages
+- Common errors and fixes:
+
+🔧 COMMON COMPILATION ERRORS & FIXES:
+
+1. "The type or namespace 'Text' could not be found"
+   FIX: Add this to top of AutoSceneBuilder.cs:
+   using UnityEngine.UI;
+
+2. "The type or namespace 'TMPro' could not be found"
+   FIX: Already fixed - removed TMPro dependency
+
+3. "Assembly 'Unity.Multiplayer.Center' will not be loaded"
+   FIX: Ignore this - it's a package warning, not an error
+
+4. "Script class cannot be found"
+   FIX: Right-click in Project > Reimport All
+
+✅ STEP 3: ONCE ERRORS ARE FIXED
+- Unity will automatically recompile
+- Exit Safe Mode
+- You should see the "Eclipse Reborn" menu appear
+- Navigate to Assets > Sprites > Characters to see character art
+
+✅ STEP 4: SEE CHARACTER VISUALS
+- In Project window: Assets > Sprites > Characters
+- Drag character sprites to Scene view
+- Click Eclipse Reborn > Setup Combat Demo Scene
+
+🎯 GOAL: See the beautiful Eclipse Reborn character sprites!
+- Auron (Golden Warrior)
+- Cira (Blue Mage)  
+- Lyra (Green Healer)
+- Milo (Brown Rogue)
+- Ronan (Red Tank)
+
+If you need help, check the Console window for specific error messages.

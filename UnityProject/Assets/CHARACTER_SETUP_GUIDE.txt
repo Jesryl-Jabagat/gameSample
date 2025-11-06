@@ -1,0 +1,21 @@
+﻿ECLIPSE REBORN - Quick Character Setup
+
+TO SEE CHARACTER VISUALS:
+
+1. In Project window, go to: Assets > Sprites > Characters
+2. Drag any character sprite to Scene view
+3. Available characters:
+   - Auron (Golden Warrior)
+   - Cira (Blue Mage) 
+   - Lyra (Green Healer)
+   - Milo (Brown Rogue)
+   - Ronan (Red Tank)
+
+4. To see animations, drag the animation sheets too:
+   - [CharacterName]_walk_animation_sheet
+   - [CharacterName]_attack_animation_sheet
+   - [CharacterName]_skill_animation_sheet
+
+5. Press Play button to test!
+
+TIP: Right-click in Scene view and select 'Frame Selected' to center camera on character

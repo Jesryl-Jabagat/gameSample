@@ -188,7 +188,7 @@ public class CombatSystem : MonoBehaviour
     /// <summary>
     /// Cleanse all debuffs from target (used by healer skills).
     /// </summary>
-    public void CleanseDeb buffs(GameObject target)
+    public void CleanseDebuffs(GameObject target)
     {
         for (int i = activeStatusEffects.Count - 1; i >= 0; i--)
         {

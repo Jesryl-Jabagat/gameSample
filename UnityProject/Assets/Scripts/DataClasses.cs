@@ -3,284 +3,72 @@ using System;
 using System.Collections.Generic;
 
 /// <summary>
-/// Core data classes for Eclipse Reborn game systems.
-/// These classes define the structure for heroes, enemies, buildings, items, and save data.
-/// All classes are Serializable to support Unity's JsonUtility and Inspector display.
+/// Core data classes for Eclipse Reborn - Final Clean Version
 /// </summary>
 
-// ==================== HERO DATA ====================
-
-/// <summary>
-/// HeroData holds all stats and progression data for a playable hero.
-/// Loaded from hero_templates.json at runtime.
-/// </summary>
 [Serializable]
 public class HeroData
 {
-    public string heroId;
-    public string heroName;
-    public string title;
-    public string role;
+    public string heroId = "auron";
+    public string heroName = "Auron";
+    public HeroClass heroClass = HeroClass.Warrior;
+    public string description = "Golden Blade Guardian";
     
-    // Current stats
-    public float hp;
-    public float maxHp;
-    public float atk;
-    public float def;
-    public float spd;
-    public float crit;
+    public int baseHealth = 100;
+    public int baseAttack = 25;
+    public int baseDefense = 10;
+    public float baseAttackSpeed = 1.0f;
+    public float baseMoveSpeed = 3.0f;
     
-    // Level and XP
-    public int level;
-    public int currentXP;
+    public int currentLevel = 1;
+    public int currentXP = 0;
+    public int maxXP = 100;
     
-    // Skill data
-    public float skill1Multiplier;
-    public float skill1Range;
-    public float skill1CastTime;
-    public float skill1CooldownMax;
-    public float skill1Cooldown;
+    public float critChance = 0.05f;
+    public float critMultiplier = 2.0f;
+    public int currentHealth;
+    public int maxHealth;
     
-    public float skill2Multiplier;
-    public float skill2Range;
-    public float skill2CastTime;
-    public float skill2CooldownMax;
-    public float skill2Cooldown;
+    public List<HeroSkill> skills = new List<HeroSkill>();
     
-    // Stat growth per level (loaded from template)
-    public float hpGrowth;
-    public float atkGrowth;
-    public float defGrowth;
-    public float spdGrowth;
-    public float critGrowth;
-}
-
-// ==================== BUILDING DATA ====================
-
-/// <summary>
-/// Building represents a Sanctuary structure with upgrade and production capabilities.
-/// </summary>
-[Serializable]
-public class Building
-{
-    public string buildingId;
-    public string buildingName;
-    public int currentLevel;
-    public int maxLevel;
-    
-    public int baseCost;
-    public float baseTime;
-    public float costGrowthFactor;
-    public float timeGrowthFactor;
-    
-    public float productionPerHour;
-    public float productionGrowthFactor;
-    public bool producesPremiumCurrency;
-    
-    public bool isUpgrading;
-    public float upgradeTimeRemaining;
-    public DateTime upgradeStartTime;
-    
-    public int GetUpgradeCost()
+    public void Initialize()
     {
-        return Mathf.RoundToInt(baseCost * Mathf.Pow(costGrowthFactor, currentLevel));
-    }
-    
-    public float GetUpgradeTime()
-    {
-        return baseTime * Mathf.Pow(timeGrowthFactor, currentLevel);
-    }
-    
-    public int GetInstantFinishCost()
-    {
-        if (!isUpgrading) return 0;
-        float timeRemainingHours = upgradeTimeRemaining / 3600f;
-        return Mathf.Clamp(Mathf.RoundToInt(timeRemainingHours * 50f), 50, 300);
+        maxHealth = baseHealth + (currentLevel - 1) * 10;
+        currentHealth = maxHealth;
     }
 }
 
-// ==================== GAME CONFIG ====================
-
-/// <summary>
-/// GameConfig structure matching game_config.json.
-/// Contains XP tables, combat formulas, building data, and currency definitions.
-/// </summary>
-[Serializable]
-public class GameConfig
+public enum HeroClass
 {
-    public XPSystemConfig xp_system;
-    public CombatFormulas combat_formulas;
-    public BuildingsConfig buildings;
-    public CurrenciesConfig currencies;
-    public MonetizationConfig monetization;
+    Warrior,
+    Mage,
+    Healer,
+    Rogue,
+    Tank
 }
 
 [Serializable]
-public class XPSystemConfig
+public class HeroSkill
 {
-    public string formula;
-    public int max_level;
-    public int stage_xp_reward_base;
-    public float boss_xp_multiplier;
-    
-    // Note: Dictionary not directly supported by JsonUtility
-    // Use Newtonsoft.Json or parse manually
-    public List<XPLevelEntry> level_table_list;
-}
-
-[Serializable]
-public class XPLevelEntry
-{
-    public int level;
-    public int xp_required;
-    public int cumulative_xp;
-}
-
-[Serializable]
-public class CombatFormulas
-{
-    public string damage_formula;
-    public float base_crit_damage;
-    public float legendary_crit_damage;
-    public string dodge_formula;
-    public float max_dodge_chance;
-}
-
-[Serializable]
-public class BuildingsConfig
-{
-    public BuildingTemplate barracks;
-    public BuildingTemplate workshop;
-    public BuildingTemplate shard_reactor;
-    public BuildingTemplate treasury;
-    public BuildingTemplate training_grounds;
-}
-
-[Serializable]
-public class BuildingTemplate
-{
-    public int base_cost;
-    public int base_time_seconds;
-    public float cost_growth_factor;
-    public float time_growth_factor;
-    public int max_level;
-    public float production_per_hour;
-    public float production_growth_factor;
-}
-
-[Serializable]
-public class CurrenciesConfig
-{
-    public CurrencyDefinition gold;
-    public CurrencyDefinition solar_shards;
-}
-
-[Serializable]
-public class CurrencyDefinition
-{
-    public string name;
+    public string skillId;
+    public string skillName;
+    public SkillType skillType;
+    public int manaCost;
+    public float cooldown;
+    public float damage;
     public string description;
-    public int max_cap;
-}
-
-[Serializable]
-public class MonetizationConfig
-{
-    public RewardedAdsConfig rewarded_ads;
-}
-
-[Serializable]
-public class RewardedAdsConfig
-{
-    public int daily_limit_free;
-    public int daily_limit_vip;
-}
-
-// ==================== SAVE DATA ====================
-
-/// <summary>
-/// SaveData structure for JSON serialization.
-/// Contains all player progress data.
-/// </summary>
-[Serializable]
-public class SaveData
-{
-    public string version;
-    public string lastSavedTimestamp;
-    public string playerId;
-    
-    public int playerLevel;
-    public int currentXP;
-    
-    public int gold;
-    public int solarShards;
-    
-    public List<HeroSaveData> heroes;
-    public List<BuildingSaveData> buildings;
-    public List<ItemSaveData> inventory;
-    
-    public List<string> purchasedProducts;
-    
-    public bool isVIP;
-    public string vipExpiryDate;
-    
-    public int adsWatchedToday;
-    public string lastAdResetDate;
-}
-
-[Serializable]
-public class HeroSaveData
-{
-    public string heroId;
-    public int level;
-    public int currentXP;
     public bool isUnlocked;
-    public float currentHP;
-    public List<EquipmentSlot> equipment;
 }
 
-[Serializable]
-public class BuildingSaveData
+public enum SkillType
 {
-    public string buildingId;
-    public int currentLevel;
-    public bool isUpgrading;
-    public string upgradeStartTime;
-    public float upgradeTimeRemaining;
+    Attack,
+    Heal,
+    Buff,
+    Debuff,
+    Ultimate
 }
 
-[Serializable]
-public class ItemSaveData
-{
-    public string itemId;
-    public int quantity;
-    public int enhancementLevel;
-}
-
-[Serializable]
-public class EquipmentSlot
-{
-    public string slotType;
-    public string itemId;
-}
-
-// ==================== STATUS EFFECTS ====================
-
-/// <summary>
-/// Status effect types for combat system.
-/// </summary>
-public enum StatusEffectType
-{
-    Burn,
-    Stun,
-    Shield,
-    AttackBuff,
-    DefenseBuff
-}
-
-/// <summary>
-/// StatusEffect data structure for tracking active effects.
-/// </summary>
 [Serializable]
 public class StatusEffect
 {
@@ -293,25 +81,23 @@ public class StatusEffect
     public float tickTimer;
 }
 
-// ==================== ENEMY DATA ====================
-
-/// <summary>
-/// Enemy component for AI-controlled hostiles.
-/// Minimal implementation - expand with EnemyAI script.
-/// </summary>
-public class Enemy : MonoBehaviour
+public enum StatusEffectType
 {
-    public string enemyId;
-    public string enemyName;
-    public int level;
-    
-    public float maxHP;
-    public float currentHP;
-    public float atk;
-    public float def;
-    public float spd;
-    
-    public float detectionRange = 5f;
+    Poison,
+    Burn,
+    Freeze,
+    Stun,
+    Heal,
+    Buff,
+    Debuff
+}
+
+public class SimpleEnemyAI : MonoBehaviour
+{
+    public int maxHP = 50;
+    public int currentHP = 50;
+    public int attackDamage = 15;
+    public float moveSpeed = 2f;
     public float attackRange = 1.5f;
     public float attackCooldown = 1f;
     
@@ -322,54 +108,41 @@ public class Enemy : MonoBehaviour
     {
         if (currentHP <= 0) return;
         
-        // Simple chase AI
         if (target == null)
         {
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            GameObject player = GameObject.FindWithTag("Player");
             if (player != null)
             {
-                float dist = Vector3.Distance(transform.position, player.transform.position);
-                if (dist < detectionRange)
-                {
-                    target = player.transform;
-                }
+                target = player.transform;
             }
         }
         
         if (target != null)
         {
-            float dist = Vector3.Distance(transform.position, target.position);
+            float distance = Vector3.Distance(transform.position, target.position);
             
-            if (dist > attackRange)
+            if (distance > attackRange)
             {
-                // Move towards player
                 Vector3 direction = (target.position - transform.position).normalized;
-                transform.position += direction * spd * Time.deltaTime;
+                transform.position += direction * moveSpeed * Time.deltaTime;
             }
-            else
+            else if (Time.time - lastAttackTime > attackCooldown)
             {
-                // Attack if cooldown ready
-                if (Time.time - lastAttackTime >= attackCooldown)
-                {
-                    Attack();
-                    lastAttackTime = Time.time;
-                }
+                AttackTarget();
+                lastAttackTime = Time.time;
             }
         }
     }
     
-    void Attack()
+    void AttackTarget()
     {
-        // Deal damage to player
-        CombatTarget playerTarget = target.GetComponent<CombatTarget>();
-        if (playerTarget != null)
+        if (target != null)
         {
-            float damage = atk * (100f / (100f + playerTarget.GetDefense()));
-            playerTarget.TakeDamage(damage);
+            Debug.Log($"Enemy attacks for {attackDamage} damage!");
         }
     }
     
-    public void TakeDamage(float damage)
+    public void TakeDamage(int damage)
     {
         currentHP -= damage;
         if (currentHP <= 0)
@@ -380,33 +153,19 @@ public class Enemy : MonoBehaviour
     
     void Die()
     {
-        // Drop loot, grant XP
-        XPSystem xpSystem = FindObjectOfType<XPSystem>();
-        if (xpSystem != null)
-        {
-            xpSystem.AddXP(50 * level);
-        }
-        
-        Destroy(gameObject, 0.5f);
+        Debug.Log("Enemy defeated!");
+        gameObject.SetActive(false);
     }
 }
 
-// ==================== UTILITY CLASSES ====================
-
-/// <summary>
-/// Simple object pool for mobile optimization.
-/// Prevents GC spikes from Instantiate/Destroy.
-/// </summary>
 public class ObjectPool<T> where T : UnityEngine.Object
 {
     private Queue<T> pool = new Queue<T>();
     private T prefab;
-    private int initialSize;
     
     public ObjectPool(T prefab, int initialSize)
     {
         this.prefab = prefab;
-        this.initialSize = initialSize;
         
         for (int i = 0; i < initialSize; i++)
         {
@@ -423,8 +182,7 @@ public class ObjectPool<T> where T : UnityEngine.Object
     {
         if (pool.Count == 0)
         {
-            T obj = UnityEngine.Object.Instantiate(prefab);
-            return obj;
+            return UnityEngine.Object.Instantiate(prefab);
         }
         
         T pooledObj = pool.Dequeue();
@@ -445,12 +203,9 @@ public class ObjectPool<T> where T : UnityEngine.Object
     }
 }
 
-/// <summary>
-/// Damage number floating text component.
-/// </summary>
 public class DamageNumber : MonoBehaviour
 {
-    [SerializeField] private TMPro.TextMeshPro textMesh;
+    [SerializeField] private TextMesh textMesh;
     [SerializeField] private float floatSpeed = 1f;
     [SerializeField] private float lifetime = 1f;
     
@@ -462,7 +217,7 @@ public class DamageNumber : MonoBehaviour
         {
             textMesh.text = Mathf.RoundToInt(damage).ToString();
             textMesh.color = color;
-            textMesh.fontSize = isCritical ? 8f : 6f;
+            textMesh.fontSize = isCritical ? 8 : 6;
         }
         
         onComplete = onCompleteCallback;
@@ -477,46 +232,5 @@ public class DamageNumber : MonoBehaviour
     private void Complete()
     {
         onComplete?.Invoke();
-    }
-}
-
-/// <summary>
-/// Joystick component for virtual touch controls.
-/// Simple radial joystick implementation.
-/// </summary>
-public class Joystick : MonoBehaviour
-{
-    [SerializeField] private RectTransform background;
-    [SerializeField] private RectTransform knob;
-    [SerializeField] private float handleRange = 1f;
-    
-    private Vector2 input = Vector2.zero;
-    
-    public float Horizontal => input.x;
-    public float Vertical => input.y;
-    
-    void Update()
-    {
-        // Touch/mouse input handling
-        if (Input.GetMouseButton(0))
-        {
-            Vector2 localPoint;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                background, 
-                Input.mousePosition, 
-                null, 
-                out localPoint
-            );
-            
-            localPoint /= background.sizeDelta / 2f;
-            input = Vector2.ClampMagnitude(localPoint, 1f);
-            
-            knob.anchoredPosition = input * background.sizeDelta * handleRange / 2f;
-        }
-        else
-        {
-            input = Vector2.zero;
-            knob.anchoredPosition = Vector2.zero;
-        }
     }
 }

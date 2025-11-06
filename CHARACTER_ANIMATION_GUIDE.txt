@@ -1,0 +1,57 @@
+ECLIPSE REBORN - CHARACTER ANIMATION SETUP GUIDE
+=================================================
+
+🎨 QUICK START - ANIMATED CHARACTER IN 5 MINUTES:
+
+STEP 1: CREATE CHARACTER
+- Hierarchy > Create Empty > Name: "Auron"
+- Add Components: SpriteRenderer, Animator, Rigidbody2D, CapsuleCollider2D
+
+STEP 2: ASSIGN SPRITE
+- Inspector > SpriteRenderer > Sprite > Auron_hero_character_sprite
+
+STEP 3: ADD SCRIPTS
+- Add Component > PlayerController (for movement)
+- Add Component > CombatTarget (for health)
+
+STEP 4: CREATE ANIMATOR
+- Project > Create > Animator Controller > "Auron_Controller"
+- Auron > Animator > Controller > Assign "Auron_Controller"
+
+STEP 5: SETUP ANIMATIONS
+- Window > Animation > Animation
+- Create clips: Idle, Walk, Attack, Skill1, Skill2
+
+🎯 ANIMATION STATES TO CREATE:
+- Idle: Single frame from character sprite
+- Walk: Frames from Auron_walk_animation_sheet
+- Attack: Frames from Auron_attack_animation_sheet
+- Skill: Frames from Auron_skill_animation_sheet
+- Hit: Frames from Auron_hit_animation_sheet
+- Death: Frames from Auron_death_animation_sheet
+
+🎨 AVAILABLE CHARACTER SPRITES:
+- Auron (Golden Warrior) - Complete animation set
+- Cira (Blue Mage) - Spell animations
+- Lyra (Green Healer) - Healing animations
+- Milo (Brown Rogue) - Stealth animations  
+- Ronan (Red Tank) - Defense animations
+
+🎮 CONTROLS (when PlayerController is attached):
+- WASD: Movement
+- Space: Attack
+- Q: Skill 1
+- W: Skill 2
+- Shift: Dash
+
+🔧 TIPS:
+- Set Rigidbody2D > Gravity Scale to 0 for top-down movement
+- Use Animator Parameters: Speed, Attack, Skill1, Skill2 triggers
+- Frame rate 8-12 FPS works well for pixel art
+- Use Sprite Editor to slice animation sheets into frames
+
+🌟 ADVANCED:
+- Create blend trees for 8-directional movement
+- Add particle effects for skills
+- Implement hit reactions and knockback
+- Create state machines for complex behaviors

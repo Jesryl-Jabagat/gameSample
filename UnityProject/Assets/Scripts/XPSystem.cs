@@ -123,14 +123,15 @@ public class XPSystem : MonoBehaviour
             return;
         }
 
-        heroData.maxHp += 25f;
-        heroData.hp = heroData.maxHp;
-        heroData.atk += 3.2f;
-        heroData.def += 1.5f;
-        heroData.spd += 0.5f;
-        heroData.crit += 0.0015f;
+        heroData.baseHealth += 25;
+        heroData.maxHealth = heroData.baseHealth + (heroData.currentLevel - 1) * 10;
+        heroData.currentHealth = heroData.maxHealth;
+        heroData.baseAttack += 3;
+        heroData.baseDefense += 2;
+        heroData.baseMoveSpeed += 0.1f;
+        heroData.critChance += 0.005f;
 
-        Debug.Log($"Stats increased! HP: {heroData.maxHp}, ATK: {heroData.atk}, DEF: {heroData.def}");
+        Debug.Log($"Stats increased! HP: {heroData.maxHealth}, ATK: {heroData.baseAttack}, DEF: {heroData.baseDefense}");
     }
 
     /// <summary>

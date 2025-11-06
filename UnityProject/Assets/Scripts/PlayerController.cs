@@ -1,8 +1,8 @@
 using UnityEngine;
 
 /// <summary>
-/// PlayerController handles touch input, movement, combat actions, and animation control for player heroes.
-/// Optimized for mobile with touch joystick, skill buttons, and animation parameter management.
+/// PlayerController handles keyboard input, movement, combat actions, and animation control for player heroes.
+/// Simplified version without UI dependencies for initial testing.
 /// </summary>
 public class PlayerController : MonoBehaviour
 {
@@ -22,12 +22,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private Transform attackPoint;
 
-    [Header("UI References - Assign in Inspector")]
-    [SerializeField] private Joystick movementJoystick;
-    [SerializeField] private UnityEngine.UI.Button attackButton;
-    [SerializeField] private UnityEngine.UI.Button skill1Button;
-    [SerializeField] private UnityEngine.UI.Button skill2Button;
-    [SerializeField] private UnityEngine.UI.Button dashButton;
+    [Header("Input Settings")]
+    [SerializeField] private KeyCode attackKey = KeyCode.Space;
+    [SerializeField] private KeyCode skill1Key = KeyCode.Q;
+    [SerializeField] private KeyCode skill2Key = KeyCode.W;
+    [SerializeField] private KeyCode dashKey = KeyCode.LeftShift;
 
     private Vector2 moveInput;
     private bool isDashing;
@@ -41,13 +40,12 @@ public class PlayerController : MonoBehaviour
     private HeroData currentHeroData;
     private CombatSystem combatSystem;
 
+    // Animation parameter hashes for performance
     private static readonly int AnimSpeed = Animator.StringToHash("Speed");
     private static readonly int AnimAttack = Animator.StringToHash("Attack");
     private static readonly int AnimSkill1 = Animator.StringToHash("Skill1");
     private static readonly int AnimSkill2 = Animator.StringToHash("Skill2");
     private static readonly int AnimDash = Animator.StringToHash("Dash");
-    private static readonly int AnimHit = Animator.StringToHash("Hit");
-    private static readonly int AnimDeath = Animator.StringToHash("Death");
 
     private void Awake()
     {
@@ -58,96 +56,134 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        SetupInputHandlers();
-    }
-
-    /// <summary>
-    /// Initialize touch input listeners for combat buttons.
-    /// Mobile-optimized with direct button event binding.
-    /// </summary>
-    private void SetupInputHandlers()
-    {
-        if (attackButton != null)
-        {
-            attackButton.onClick.AddListener(OnAttackButtonPressed);
-        }
-
-        if (skill1Button != null)
-        {
-            skill1Button.onClick.AddListener(OnSkill1ButtonPressed);
-        }
-
-        if (skill2Button != null)
-        {
-            skill2Button.onClick.AddListener(OnSkill2ButtonPressed);
-        }
-
-        if (dashButton != null)
-        {
-            dashButton.onClick.AddListener(OnDashButtonPressed);
-        }
+        Debug.Log("PlayerController initialized with keyboard controls:");
+        Debug.Log($"Movement: WASD or Arrow Keys");
+        Debug.Log($"Attack: {attackKey}, Skill1: {skill1Key}, Skill2: {skill2Key}, Dash: {dashKey}");
     }
 
     private void Update()
     {
-        if (isDashing || isAttacking) return;
-
-        HandleMovementInput();
-        UpdateAnimationParameters();
+        HandleInput();
+        HandleMovement();
+        UpdateAnimations();
     }
 
-    private void FixedUpdate()
+    private void HandleInput()
     {
-        if (isDashing)
+        // Movement input
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+        moveInput = new Vector2(horizontal, vertical).normalized;
+
+        // Combat input
+        if (Input.GetKeyDown(attackKey) && canAttack)
         {
-            return;
+            PerformAttack();
         }
 
-        if (!isAttacking)
+        if (Input.GetKeyDown(skill1Key))
         {
-            Move();
+            PerformSkill1();
+        }
+
+        if (Input.GetKeyDown(skill2Key))
+        {
+            PerformSkill2();
+        }
+
+        if (Input.GetKeyDown(dashKey) && canDash)
+        {
+            PerformDash();
         }
     }
 
-    /// <summary>
-    /// Read joystick input for 8-directional movement.
-    /// Supports both virtual joystick and keyboard fallback for testing.
-    /// </summary>
-    private void HandleMovementInput()
+    private void HandleMovement()
     {
-        if (movementJoystick != null)
-        {
-            moveInput = new Vector2(movementJoystick.Horizontal, movementJoystick.Vertical);
-        }
-        else
-        {
-            moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        }
+        if (isDashing) return;
 
-        moveInput = moveInput.normalized;
+        Vector2 movement = moveInput * moveSpeed * Time.deltaTime;
+        transform.Translate(movement);
 
+        // Face movement direction
         if (moveInput.x != 0)
         {
-            FlipSprite(moveInput.x < 0);
+            transform.localScale = new Vector3(moveInput.x > 0 ? 1 : -1, 1, 1);
         }
     }
 
-    /// <summary>
-    /// Apply movement using Rigidbody2D for physics-based collision.
-    /// </summary>
-    private void Move()
+    private void UpdateAnimations()
     {
-        Vector2 movement = moveInput * moveSpeed;
-        rb.velocity = movement;
+        if (animator != null)
+        {
+            animator.SetFloat(AnimSpeed, moveInput.magnitude);
+        }
     }
 
-    /// <summary>
-    /// Perform dash in current movement direction.
-    /// Includes i-frames during dash (can be extended with invulnerability logic).
-    /// </summary>
-    private void OnDashButtonPressed()
+    private void PerformAttack()
     {
-        if (!canDash || isDashing || moveInput == Vector2.zero) return;
+        if (!canAttack || isAttacking) return;
+
+        isAttacking = true;
+        canAttack = false;
+        lastAttackTime = Time.time;
+
+        Debug.Log("Player attacks!");
+
+        if (animator != null)
+        {
+            animator.SetTrigger(AnimAttack);
+        }
+
+        // Check for enemies in attack range
+        Collider2D[] enemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
+        foreach (Collider2D enemy in enemies)
+        {
+            // Deal damage to enemy
+            var enemyAI = enemy.GetComponent<SimpleEnemyAI>();
+            if (enemyAI != null)
+            {
+                enemyAI.TakeDamage(25);
+                Debug.Log("Hit enemy for 25 damage!");
+            }
+        }
+
+        // Reset attack state
+        Invoke(nameof(ResetAttack), attackCooldown);
+    }
+
+    private void ResetAttack()
+    {
+        isAttacking = false;
+        canAttack = true;
+    }
+
+    private void PerformSkill1()
+    {
+        Debug.Log("Player uses Skill 1!");
+        
+        if (animator != null)
+        {
+            animator.SetTrigger(AnimSkill1);
+        }
+
+        // Add skill logic here
+    }
+
+    private void PerformSkill2()
+    {
+        Debug.Log("Player uses Skill 2!");
+        
+        if (animator != null)
+        {
+            animator.SetTrigger(AnimSkill2);
+        }
+
+        // Add skill logic here
+    }
+
+    private void PerformDash()
+    {
+        if (!canDash || isDashing) return;
 
         StartCoroutine(DashCoroutine());
     }
@@ -156,189 +192,36 @@ public class PlayerController : MonoBehaviour
     {
         isDashing = true;
         canDash = false;
-        animator.SetTrigger(AnimDash);
+        lastDashTime = Time.time;
 
-        Vector2 dashDirection = moveInput.normalized;
-        float dashTimer = 0f;
+        Debug.Log("Player dashes!");
 
-        while (dashTimer < dashDuration)
+        if (animator != null)
         {
-            rb.velocity = dashDirection * dashSpeed;
-            dashTimer += Time.deltaTime;
+            animator.SetTrigger(AnimDash);
+        }
+
+        Vector2 dashDirection = moveInput != Vector2.zero ? moveInput : Vector2.right;
+        float dashTime = 0f;
+
+        while (dashTime < dashDuration)
+        {
+            transform.Translate(dashDirection * dashSpeed * Time.deltaTime);
+            dashTime += Time.deltaTime;
             yield return null;
         }
 
-        rb.velocity = Vector2.zero;
         isDashing = false;
 
+        // Reset dash cooldown
         yield return new WaitForSeconds(dashCooldown);
         canDash = true;
     }
 
-    /// <summary>
-    /// Handle basic attack button press.
-    /// Attack applies damage via CombatSystem in animation event (OnAttackHit).
-    /// </summary>
-    private void OnAttackButtonPressed()
-    {
-        if (!canAttack || isAttacking) return;
-
-        StartCoroutine(AttackCoroutine());
-    }
-
-    private System.Collections.IEnumerator AttackCoroutine()
-    {
-        isAttacking = true;
-        canAttack = false;
-        rb.velocity = Vector2.zero;
-
-        animator.SetTrigger(AnimAttack);
-
-        yield return new WaitForSeconds(attackCooldown);
-
-        isAttacking = false;
-        canAttack = true;
-    }
-
-    /// <summary>
-    /// Called via Animation Event on attack hit frame (frame 4 for most heroes).
-    /// Detects enemies in range and applies damage.
-    /// </summary>
-    public void OnAttackHit()
-    {
-        Collider2D[] hits = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
-
-        foreach (Collider2D hit in hits)
-        {
-            if (combatSystem != null)
-            {
-                combatSystem.DealDamage(hit.gameObject, 1.0f);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Execute Skill 1 (unique per hero, defined in HeroData).
-    /// Animation triggers skill VFX; damage applied in animation event OnSkill1Hit.
-    /// </summary>
-    private void OnSkill1ButtonPressed()
-    {
-        if (currentHeroData == null || currentHeroData.skill1Cooldown > 0) return;
-
-        StartCoroutine(Skill1Coroutine());
-    }
-
-    private System.Collections.IEnumerator Skill1Coroutine()
-    {
-        rb.velocity = Vector2.zero;
-        animator.SetTrigger(AnimSkill1);
-
-        currentHeroData.skill1Cooldown = currentHeroData.skill1CooldownMax;
-
-        yield return new WaitForSeconds(currentHeroData.skill1CastTime);
-    }
-
-    /// <summary>
-    /// Called via Animation Event on skill 1 hit frame.
-    /// </summary>
-    public void OnSkill1Hit()
-    {
-        if (currentHeroData == null) return;
-
-        Collider2D[] hits = Physics2D.OverlapCircleAll(attackPoint.position, currentHeroData.skill1Range, enemyLayer);
-
-        foreach (Collider2D hit in hits)
-        {
-            if (combatSystem != null)
-            {
-                combatSystem.DealDamage(hit.gameObject, currentHeroData.skill1Multiplier);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Execute Skill 2 / Ultimate (charges via combat, defined in HeroData).
-    /// Animation triggers ultimate VFX; damage applied in animation event OnSkill2Hit.
-    /// </summary>
-    private void OnSkill2ButtonPressed()
-    {
-        if (currentHeroData == null || currentHeroData.skill2Cooldown > 0) return;
-
-        StartCoroutine(Skill2Coroutine());
-    }
-
-    private System.Collections.IEnumerator Skill2Coroutine()
-    {
-        rb.velocity = Vector2.zero;
-        animator.SetTrigger(AnimSkill2);
-
-        currentHeroData.skill2Cooldown = currentHeroData.skill2CooldownMax;
-
-        yield return new WaitForSeconds(currentHeroData.skill2CastTime);
-    }
-
-    /// <summary>
-    /// Called via Animation Event on skill 2 hit frame.
-    /// </summary>
-    public void OnSkill2Hit()
-    {
-        if (currentHeroData == null) return;
-
-        Collider2D[] hits = Physics2D.OverlapCircleAll(attackPoint.position, currentHeroData.skill2Range, enemyLayer);
-
-        foreach (Collider2D hit in hits)
-        {
-            if (combatSystem != null)
-            {
-                combatSystem.DealDamage(hit.gameObject, currentHeroData.skill2Multiplier, true);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Update Animator parameters for blend tree transitions.
-    /// Speed controls idle/walk/run blend.
-    /// </summary>
-    private void UpdateAnimationParameters()
-    {
-        float speed = moveInput.magnitude;
-        animator.SetFloat(AnimSpeed, speed);
-    }
-
-    /// <summary>
-    /// Flip sprite based on movement direction (for 2D side view).
-    /// </summary>
-    private void FlipSprite(bool faceLeft)
-    {
-        Vector3 scale = transform.localScale;
-        scale.x = faceLeft ? -Mathf.Abs(scale.x) : Mathf.Abs(scale.x);
-        transform.localScale = scale;
-    }
-
-    /// <summary>
-    /// Initialize hero data (called when hero is spawned or switched).
-    /// </summary>
     public void SetHeroData(HeroData heroData)
     {
         currentHeroData = heroData;
-    }
-
-    /// <summary>
-    /// Trigger hit animation when taking damage (called by CombatSystem).
-    /// </summary>
-    public void OnTakeDamage()
-    {
-        animator.SetTrigger(AnimHit);
-    }
-
-    /// <summary>
-    /// Trigger death animation and disable controls.
-    /// </summary>
-    public void OnDeath()
-    {
-        animator.SetTrigger(AnimDeath);
-        enabled = false;
-        rb.velocity = Vector2.zero;
+        Debug.Log($"Hero set: {heroData.heroName}");
     }
 
     private void OnDrawGizmosSelected()
@@ -351,31 +234,4 @@ public class PlayerController : MonoBehaviour
     }
 }
 
-/// <summary>
-/// HeroData holds hero-specific stats and skill parameters.
-/// Loaded from hero_templates.json at runtime.
-/// </summary>
-[System.Serializable]
-public class HeroData
-{
-    public string heroId;
-    public string heroName;
-    public float hp;
-    public float maxHp;
-    public float atk;
-    public float def;
-    public float spd;
-    public float crit;
-
-    public float skill1Multiplier;
-    public float skill1Range;
-    public float skill1CastTime;
-    public float skill1CooldownMax;
-    public float skill1Cooldown;
-
-    public float skill2Multiplier;
-    public float skill2Range;
-    public float skill2CastTime;
-    public float skill2CooldownMax;
-    public float skill2Cooldown;
-}
+// HeroData class is defined in DataClasses.cs
